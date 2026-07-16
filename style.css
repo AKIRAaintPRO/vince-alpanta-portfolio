@@ -119,13 +119,18 @@ a:focus-visible, button:focus-visible, video:focus-visible { outline: 2px solid 
 .featured-project { display: grid; grid-template-columns: 1.7fr .8fr; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .featured-project + .featured-project { margin-top: 22px; }
 .video-wrap { min-width: 0; display: grid; place-items: center; background: #000; }
-.video-wrap video { display: block; width: 100%; max-height: 650px; object-fit: contain; }
-.project-info { padding: clamp(28px, 5vw, 60px); display: flex; flex-direction: column; justify-content: center; }
+.video-wrap video { display: block; width: 100%; max-height: 620px; object-fit: contain; }
+.project-info { position: relative; min-width: 0; padding: clamp(36px, 5vw, 60px); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.project-index { position: absolute; top: 28px; right: 30px; color: rgba(140, 237, 53, .55); font-size: 11px; font-weight: 700; letter-spacing: .16em; }
 .project-type, .contact-kicker { color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-.project-info h3 { margin: 20px 0; font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1.05; }
-.project-info > p:not(.project-type) { color: var(--muted); line-height: 1.7; }
+.project-info h3 { max-width: 10ch; margin: 20px 0; font-size: clamp(2rem, 3.35vw, 2.85rem); line-height: 1.08; letter-spacing: -.035em; }
+.project-info > p:not(.project-type) { max-width: 34ch; color: var(--muted); font-size: 15px; line-height: 1.75; }
 .project-info ul { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
-.project-info li { padding: 8px 13px; border: 1px solid var(--line); border-radius: 99px; color: #a9b1bd; font-size: 12px; }
+.project-info li { padding: 8px 13px; border: 1px solid var(--line); border-radius: 99px; color: #b6bdc7; font-size: 11px; white-space: nowrap; }
+@media (min-width: 761px) {
+  .featured-project { min-height: 580px; }
+  .video-wrap video { height: 100%; }
+}
 .work-principles { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 22px; border: 1px solid var(--line); }
 .work-principles > div { min-height: 170px; padding: 28px; display: flex; flex-direction: column; }
 .work-principles > div + div { border-left: 1px solid var(--line); }
