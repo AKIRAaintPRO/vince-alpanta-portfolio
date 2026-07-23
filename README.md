@@ -1,6 +1,6 @@
 # Vince Alpanta Portfolio
 
-A responsive, accessible single-page portfolio for Vince Alpanta, Video Editor and AI Video Specialist. It uses semantic HTML, modern CSS, and dependency-free vanilla JavaScript, and is designed for GitHub Pages.
+A responsive, accessible single-page portfolio for Vince Alpanta, Video Editor and AI Video Specialist. It uses semantic HTML, modern CSS, vanilla JavaScript, and GSAP for the shared-element transitions, and is designed for GitHub Pages.
 
 ## Run locally
 

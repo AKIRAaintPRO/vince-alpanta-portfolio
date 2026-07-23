@@ -26,9 +26,16 @@
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Inter+Tight:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <script>
+    document.documentElement.dataset.initialView = location.hash && location.hash !== "#home" ? "about" : "home";
+  </script>
+  <link rel="stylesheet" href="style.css?v=20260723-58">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js" defer></script>
+  <script src="script.js?v=20260723-64" defer></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -47,9 +54,38 @@
     }
   </script>
 </head>
-<body>
+<body class="page-shell" data-page-state="home">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="top-rule" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+  <aside class="desktop-rail" id="desktopRail" aria-label="Portfolio navigation" aria-hidden="true" inert>
+    <div class="rail-card rail-intro">
+      <div class="rail-brand"><strong>VA</strong><span>Vince<br>Alpanta</span></div>
+      <p>Creating high-retention video edits that combine storytelling, motion, sound, and AI-assisted production.</p>
+    </div>
+    <div class="rail-card rail-stats">
+      <div class="flip-target" data-flip-id="stat-projects"><strong>03</strong><span>Selected<br>projects</span></div>
+      <div class="flip-target" data-flip-id="stat-workflow"><strong>AI+</strong><span>Human-led<br>workflow</span></div>
+    </div>
+    <nav class="rail-card rail-menu" aria-label="Section navigation">
+      <a href="#home"><i aria-hidden="true">⌂</i><span class="flip-target" data-flip-id="nav-home">Home</span></a>
+      <a href="#about"><i aria-hidden="true">●</i><span class="flip-target" data-flip-id="nav-about">About Me</span></a>
+      <a href="#work"><i aria-hidden="true">▰</i><span class="flip-target" data-flip-id="nav-work">Projects</span></a>
+      <a href="#expect"><i aria-hidden="true">◆</i><span class="flip-target" data-flip-id="nav-expect">What You Get</span></a>
+      <a href="#services"><i aria-hidden="true">ϟ</i><span class="flip-target" data-flip-id="nav-services">Services</span></a>
+      <a href="#process"><i aria-hidden="true">↻</i><span>Process</span></a>
+      <a href="#faq"><i aria-hidden="true">?</i><span class="flip-target" data-flip-id="nav-faq">FAQ</span></a>
+    </nav>
+    <div class="rail-card rail-tools" aria-label="Creative toolkit">
+      <span>CapCut</span><span>AI Video</span><span>Motion</span>
+    </div>
+    <div class="rail-email">
+      <a class="rail-email-address" href="mailto:itsmeakiravince@gmail.com">itsmeakiravince@gmail.com</a>
+      <button class="rail-copy" id="railCopyEmail" type="button" data-email="itsmeakiravince@gmail.com" aria-label="Copy email address"><span aria-hidden="true"></span></button>
+      <span class="rail-copy-status" id="railCopyStatus" aria-live="polite"></span>
+    </div>
+    <a class="rail-cta flip-target" data-flip-id="cta" href="#contact">Start a Project</a>
+  </aside>
 
   <header class="mobile-header" id="top">
     <a class="mobile-brand" href="#home" aria-label="Vince Alpanta, home">
@@ -77,15 +113,15 @@
 
       <nav class="hero-nav" aria-label="Main navigation">
         <div class="hero-nav-group hero-nav-left">
-          <a href="#home" aria-current="page">Home</a><i></i>
-          <a href="#about">About Me</a><i></i>
-          <a href="#work">Work</a>
+          <a class="flip-source" data-flip-id="nav-home" href="#home">Home</a><i></i>
+          <a class="flip-source" data-flip-id="nav-about" href="#about">About Me</a><i></i>
+          <a class="flip-source" data-flip-id="nav-work" href="#work">Projects</a>
         </div>
         <div class="hero-nav-gap" aria-hidden="true"></div>
         <div class="hero-nav-group hero-nav-right">
-          <a href="#services">Services</a><i></i>
-          <a href="#expect">Expect</a><i></i>
-          <a href="#faq">FAQ</a>
+          <a class="flip-source" data-flip-id="nav-services" href="#services">Services</a><i></i>
+          <a class="flip-source" data-flip-id="nav-expect" href="#expect">What You Get</a><i></i>
+          <a class="flip-source" data-flip-id="nav-faq" href="#faq">FAQ</a>
         </div>
       </nav>
 
@@ -95,15 +131,21 @@
 
       <div class="hero-cards" aria-label="Portfolio highlights">
         <article class="hero-card hero-card-project tilt-card">
-          <svg class="project-mark" viewBox="0 0 76 54" aria-hidden="true">
-            <path d="M4 8h24L18 46H4L14 18H4zM31 8h18L39 46H21zM52 8h20L55 46H38z"/>
-          </svg>
-          <p><strong>03</strong><span>Selected<br>Projects</span></p>
+          <span class="hero-card-glass" aria-hidden="true"></span>
+          <div class="hero-card-content flip-source" data-flip-id="stat-projects">
+            <svg class="project-mark" viewBox="0 0 76 54" aria-hidden="true">
+              <path d="M4 8h24L18 46H4L14 18H4zM31 8h18L39 46H21zM52 8h20L55 46H38z"/>
+            </svg>
+            <p><strong>03</strong><span>Selected<br>Projects</span></p>
+          </div>
         </article>
 
         <article class="hero-card hero-card-workflow tilt-card">
-          <span class="workflow-mark" aria-hidden="true">&#10022;</span>
-          <p><strong>Human-led</strong><span>AI-assisted<br>workflow</span></p>
+          <span class="hero-card-glass" aria-hidden="true"></span>
+          <div class="hero-card-content flip-source" data-flip-id="stat-workflow">
+            <span class="workflow-mark" aria-hidden="true">AI+</span>
+            <p><strong>Human-led</strong><span>AI-assisted<br>workflow</span></p>
+          </div>
         </article>
 
         <article class="hero-card hero-card-qualities tilt-card">
@@ -118,13 +160,13 @@
       </div>
 
       <div class="hero-center">
-        <h1 id="hero-title">
+        <h1 id="hero-title" tabindex="-1">
           <span>Video Editing,</span>
           <span>Applied</span>
           <span>Differently.</span>
         </h1>
         <div class="hero-actions">
-          <a class="button magnetic" href="#work">View My Work <span aria-hidden="true">&#8595;</span></a>
+          <a class="button magnetic flip-source" data-flip-id="cta" href="#work">View My Work <span aria-hidden="true">&#8595;</span></a>
           <a class="button magnetic" href="#about">About Me <span aria-hidden="true">&#8599;</span></a>
         </div>
       </div>
@@ -134,21 +176,20 @@
       <a class="hero-scroll" href="#work" aria-label="Scroll to selected work"><span>Scroll</span><i aria-hidden="true"></i></a>
     </section>
 
-    <div class="ticker" aria-hidden="true">
-      <div>
-        <span>Story-first editing</span><i>&#10022;</i><span>Motion with purpose</span><i>&#10022;</i><span>AI-assisted production</span><i>&#10022;</i><span>Platform-ready delivery</span><i>&#10022;</i>
-        <span>Story-first editing</span><i>&#10022;</i><span>Motion with purpose</span><i>&#10022;</i><span>AI-assisted production</span><i>&#10022;</i><span>Platform-ready delivery</span><i>&#10022;</i>
-      </div>
-    </div>
-
     <section class="section work" id="work" aria-labelledby="work-title">
-      <div class="shell">
-        <header class="section-heading section-heading-light reveal">
-          <p class="section-kicker">01 / Selected Work</p>
-          <div>
-            <h2 id="work-title">Work worth<br><em>watching.</em></h2>
-            <p>Three real samples spanning AI UGC, explainer storytelling, and product-focused creative.</p>
+      <div class="shell work-shell">
+        <div class="work-mobile-summary" aria-label="Vince Alpanta portfolio summary">
+          <div class="work-mobile-brand"><strong>VA</strong><span>Vince Alpanta<small>Video Editor &amp; AI Specialist</small></span></div>
+          <div class="work-mobile-stats"><span><strong>03</strong> Selected projects</span><span><strong>AI+</strong> Human-led workflow</span></div>
+          <div class="work-mobile-tools"><span>CapCut</span><span>AI Video</span><span>Motion</span></div>
+          <a href="mailto:itsmeakiravince@gmail.com">itsmeakiravince@gmail.com <span aria-hidden="true">&#8599;</span></a>
+        </div>
+        <header class="work-intro reveal">
+          <div class="work-title-block">
+            <p class="section-kicker">Selected Work</p>
+            <h2 id="work-title">Built for Attention,<br><em>Cut to Perform</em></h2>
           </div>
+          <div class="work-description">From raw footage to AI-generated visuals, I shape every frame around attention, clarity, and story. Here's a look at three recent projects built for social, product, and explainer content.</div>
         </header>
 
         <div class="project-grid">
@@ -156,6 +197,7 @@
             <button class="project-media watch-project" type="button" data-video="videos/Sample1.mp4" data-poster="videos/Sample1-thumbnail.png" data-title="Skincare UGC Product Story" aria-label="Play Skincare UGC Product Story">
               <img src="videos/Sample1-thumbnail.png" width="1023" height="1537" loading="lazy" decoding="async" alt="Skincare UGC video thumbnail">
               <span class="project-index">01</span>
+              <span class="project-tags" aria-hidden="true"><i>UGC</i><i>AI Visuals</i><i>Social</i></span>
               <span class="play-button"><i aria-hidden="true">&#9654;</i> Play Film</span>
             </button>
             <div class="project-copy">
@@ -171,6 +213,7 @@
             <button class="project-media project-media-landscape watch-project" type="button" data-video="videos/Sample3.mp4" data-poster="videos/Sample3-thumbnail.png" data-title="The Future of Creators, Visualized" aria-label="Play The Future of Creators, Visualized">
               <img src="videos/Sample3-thumbnail.png" width="1536" height="1024" loading="lazy" decoding="async" alt="AI creator economy explainer thumbnail">
               <span class="project-index">02</span>
+              <span class="project-tags" aria-hidden="true"><i>Explainer</i><i>Motion</i><i>AI</i></span>
               <span class="play-button"><i aria-hidden="true">&#9654;</i> Play Film</span>
             </button>
             <div class="project-copy">
@@ -186,6 +229,7 @@
             <button class="project-media watch-project" type="button" data-video="videos/Sample4.mp4" data-poster="videos/Sample4-Thumbnail.png" data-title="Energy You Can Feel" aria-label="Play Energy You Can Feel">
               <img src="videos/Sample4-Thumbnail.png" width="941" height="1672" loading="lazy" decoding="async" alt="Fitness product commercial thumbnail">
               <span class="project-index">03</span>
+              <span class="project-tags" aria-hidden="true"><i>Product</i><i>Motion</i><i>Sound</i></span>
               <span class="play-button"><i aria-hidden="true">&#9654;</i> Play Film</span>
             </button>
             <div class="project-copy">
@@ -202,22 +246,22 @@
 
     <section class="section about" id="about" aria-labelledby="about-title">
       <div class="shell">
-        <header class="section-heading reveal">
-          <p class="section-kicker">02 / About Me</p>
+        <header class="section-heading reveal" data-transition-reveal>
+          <p class="section-kicker">01 / About Me</p>
           <div>
-            <h2 id="about-title">Story first.<br><em>Tools second.</em></h2>
+            <h2 id="about-title" tabindex="-1">Story first.<br><em>Tools second.</em></h2>
             <p>Editing gives every generated image, raw clip, sound cue, and transition a reason to be there.</p>
           </div>
         </header>
 
         <div class="about-grid">
-          <figure class="about-portrait reveal">
+          <figure class="about-portrait reveal" data-transition-reveal>
             <span class="about-word" aria-hidden="true">VINCE</span>
             <img src="assets/vince-portrait-v2-cutout.png" width="1086" height="1448" loading="lazy" decoding="async" alt="Portrait of Vince Alpanta">
             <figcaption><strong>Vince Alpanta</strong><span>Digos City, Philippines</span></figcaption>
           </figure>
 
-          <div class="about-copy reveal">
+          <div class="about-copy reveal" data-transition-reveal>
             <p class="about-lead">I create AI-assisted advertisements, UGC-style videos, social content, explainers, and cinematic short-form visuals.</p>
             <p>My approach starts with the story, not the tool. I shape pacing, shot choice, sound, motion, and color by hand, then use AI where it can extend the visual possibilities or make exploration more flexible.</p>
             <p>I am based in Digos City, Philippines and open to remote freelance, part-time, full-time, and ongoing creative opportunities.</p>
@@ -243,7 +287,7 @@
     <section class="section services" id="services" aria-labelledby="services-title">
       <div class="shell">
         <header class="services-heading reveal">
-          <p class="section-kicker">03 / Services</p>
+          <p class="section-kicker">04 / Services</p>
           <h2 id="services-title">Ways I can<br>shape the story.</h2>
         </header>
 
@@ -261,7 +305,7 @@
     <section class="section process" id="process" aria-labelledby="process-title">
       <div class="shell">
         <header class="section-heading reveal">
-          <p class="section-kicker">04 / Process</p>
+          <p class="section-kicker">05 / Process</p>
           <div>
             <h2 id="process-title">Clear from brief<br><em>to final frame.</em></h2>
             <p>A practical workflow with deliberate checkpoints, organized feedback, and no unnecessary mystery.</p>
@@ -282,7 +326,7 @@
     <section class="section expect" id="expect" aria-labelledby="expect-title">
       <div class="shell expect-grid">
         <header class="expect-heading reveal">
-          <p class="section-kicker">05 / What You Can Expect</p>
+          <p class="section-kicker">03 / What You Can Expect</p>
           <h2 id="expect-title">Good work.<br><em>No guesswork.</em></h2>
           <p>A dependable creative process built around clarity, careful decisions, and deliverables that are ready to publish.</p>
         </header>
