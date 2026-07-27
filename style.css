@@ -16,6 +16,44 @@
   --rail-width: clamp(14.8rem, 13.8vw, 17.8rem);
   --rail-page-offset: calc(var(--rail-width) + 2.45rem);
   --rail-shell-offset: calc(var(--rail-width) + 5.45rem);
+  --work-content-inset: calc(1.45rem + var(--rail-width) + clamp(4.5rem, 5.5vw, 6.5rem));
+}
+
+@property --rail-dark-pct {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@property --rail-light-pct {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 100%;
+}
+
+
+
+/* Global smooth-scroll integration.
+   Native touch scrolling and reduced-motion behavior remain untouched. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+html.site-smooth-scroll {
+  scroll-behavior: auto;
 }
 
 *,
@@ -29,7 +67,7 @@ html {
   overflow-x: clip;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 5rem;
 }
 
@@ -151,6 +189,57 @@ a {
   will-change: transform;
 }
 
+/* First-load cinematic intro. The temporary hero is a pixel-aligned clone of
+   the stable Home scene, so the final handoff cannot disturb the accepted
+   scroll-controlled VINCE transition underneath. */
+.page-intro {
+  position: fixed;
+  z-index: 4600;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  background: var(--background);
+  border-top: 3px solid var(--text-dark);
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+html.page-intro-pending .page-intro,
+body.page-intro-active .page-intro {
+  display: block;
+}
+
+html.page-intro-pending body,
+body.page-intro-active {
+  overflow: hidden;
+}
+
+.page-intro .page-intro-hero-clone {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 43rem;
+  margin: 0;
+  pointer-events: none;
+}
+
+.page-intro .page-intro-hero-clone *,
+.page-intro .page-intro-hero-clone *::before,
+.page-intro .page-intro-hero-clone *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.no-js .page-intro {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  .page-intro { display: none !important; }
+}
+
 .mobile-header {
   display: none;
 }
@@ -184,20 +273,58 @@ a {
 }
 
 .rail-visible .hero-nav {
-  opacity: 0 !important;
+  opacity: 0;
 }
 
 .rail-card,
 .rail-email {
+  --rail-dark-pct: 0%;
+  --rail-light-pct: 100%;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.42);
+  color: color-mix(
+    in srgb,
+    var(--text-dark) var(--rail-light-pct),
+    var(--text-light) var(--rail-dark-pct)
+  );
+  border: 1px solid color-mix(
+    in srgb,
+    rgba(255,255,255,.52) var(--rail-light-pct),
+    rgba(255,255,255,.18) var(--rail-dark-pct)
+  );
   border-radius: .75rem;
-  background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.07));
-  box-shadow: 0 .7rem 1.8rem rgba(17,17,17,.08), inset 0 1px 0 rgba(255,255,255,.38);
+  background: linear-gradient(
+    145deg,
+    color-mix(
+      in srgb,
+      rgba(229,225,214,.72) var(--rail-light-pct),
+      rgba(30,30,30,.78) var(--rail-dark-pct)
+    ),
+    color-mix(
+      in srgb,
+      rgba(196,188,171,.46) var(--rail-light-pct),
+      rgba(8,8,8,.58) var(--rail-dark-pct)
+    )
+  );
+  box-shadow:
+    0 .7rem 1.8rem color-mix(
+      in srgb,
+      rgba(17,17,17,.08) var(--rail-light-pct),
+      rgba(0,0,0,.28) var(--rail-dark-pct)
+    ),
+    inset 0 1px 0 color-mix(
+      in srgb,
+      rgba(255,255,255,.42) var(--rail-light-pct),
+      rgba(255,255,255,.16) var(--rail-dark-pct)
+    );
   backdrop-filter: blur(18px) saturate(145%);
   -webkit-backdrop-filter: blur(18px) saturate(145%);
-  transition: color .35s ease, border-color .35s ease, background .35s ease;
+  transition:
+    --rail-dark-pct .18s linear,
+    --rail-light-pct .18s linear,
+    color .18s linear,
+    border-color .18s linear,
+    box-shadow .18s linear;
 }
 
 .rail-card::before,
@@ -206,30 +333,28 @@ a {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(115deg, rgba(255,255,255,.18), transparent 38%, rgba(255,255,255,.06));
+  background: linear-gradient(
+    115deg,
+    color-mix(
+      in srgb,
+      rgba(255,255,255,.24) var(--rail-light-pct),
+      rgba(255,255,255,.10) var(--rail-dark-pct)
+    ),
+    transparent 38%,
+    color-mix(
+      in srgb,
+      rgba(255,255,255,.08) var(--rail-light-pct),
+      rgba(255,255,255,.035) var(--rail-dark-pct)
+    )
+  );
   pointer-events: none;
 }
 
-.desktop-rail.rail-on-dark { color: var(--text-light); }
-.desktop-rail.rail-on-dark .rail-card,
-.desktop-rail.rail-on-dark .rail-email {
-  border-color: rgba(255,255,255,.24);
-  background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.035));
-  box-shadow: 0 .75rem 2rem rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.2);
-}
-
-.desktop-rail.rail-project-mode .rail-card,
-.desktop-rail.rail-project-mode .rail-email {
-  border-color: rgba(248,247,242,.12);
-  background: #1b1b1b;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.desktop-rail.rail-project-mode .rail-card::before,
-.desktop-rail.rail-project-mode .rail-email::before {
-  display: none;
+/* Background-aware glassmorphism. Each card adapts independently to the
+   section physically behind it, while active navigation state stays separate. */
+.desktop-rail.rail-on-dark,
+.desktop-rail.rail-project-mode {
+  color: inherit;
 }
 
 .rail-intro { padding: 1rem; }
@@ -272,14 +397,24 @@ a {
   inset: -2px;
   border: 2px solid transparent;
   border-radius: inherit;
-  background: rgba(255,255,255,.32);
+  background: color-mix(
+    in srgb,
+    rgba(255,255,255,.48) var(--rail-light-pct),
+    rgba(255,255,255,.13) var(--rail-dark-pct)
+  );
   opacity: var(--rail-row-progress, 1);
   box-shadow: none;
   pointer-events: none;
 }
 
 .rail-menu a:hover { transform: translateX(.2rem); }
-.rail-menu a:hover::before { background: rgba(255,255,255,.5); }
+.rail-menu a:hover::before {
+  background: color-mix(
+    in srgb,
+    rgba(255,255,255,.62) var(--rail-light-pct),
+    rgba(255,255,255,.20) var(--rail-dark-pct)
+  );
+}
 .rail-menu a.is-active {
   border-color: transparent;
   background: transparent;
@@ -382,13 +517,41 @@ a {
 .rail-cta:hover { transform: translateY(-.18rem); box-shadow: 0 .6rem 1.2rem rgba(0,0,0,.16); }
 
 @media (min-width: 1101px) {
-  main > .section,
+  /* Content sections use the animated rail inset, but Work owns a permanent
+     desktop inset. ScrollTrigger measures the Projects pin during initial
+     boot, which can happen while the page is still in Home/hero mode. Keeping
+     Work geometry constant from the first frame prevents a Home refresh from
+     caching a full-width pin that later slides underneath the sidebar. */
+  main > .section:not(.work),
   .footer { transition: padding-left .8s var(--ease); }
 
-  body.rail-visible main > .section,
+  body.rail-visible main > .section:not(.hero):not(.work),
   body.rail-visible .footer { padding-left: var(--rail-page-offset); }
 
-  body.rail-visible main > .section .shell { width: min(calc(100vw - var(--rail-shell-offset)), 1180px); }
+  body.rail-visible main > .section:not(.work) .shell {
+    width: min(calc(100vw - var(--rail-shell-offset)), 1180px);
+  }
+
+  /* Keep the footer inside the rail-safe desktop content width. Without this,
+     its 92vw shell extends past the right edge after the fixed sidebar inset. */
+  body.rail-visible .footer .shell {
+    width: min(calc(100vw - var(--rail-shell-offset)), 1180px);
+  }
+
+  .work {
+    /* ScrollTrigger pins this section as a fixed viewport layer. Keep the
+       section itself full width and place the rail-safe inset on the actual
+       pinned content shell so it survives pin wrapping and refreshes. */
+    padding-left: 0;
+  }
+
+  .work .work-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-right: clamp(2rem, 4vw, 4.5rem);
+    padding-left: var(--work-content-inset);
+  }
 }
 
 .button {
@@ -437,7 +600,10 @@ a {
   position: absolute;
   z-index: 10;
   top: 2.2%;
-  left: 50%;
+  /* Optical centering: balance the visible edge of V and E, not only the
+     font box. Shift the Home VINCE word slightly left without changing its
+     size, scaling, layering, or transition timing. */
+  left: calc(50% - clamp(0.65rem, 0.8vw, 1rem));
   color: var(--accent-yellow);
   font: 400 clamp(16rem, 30vw, 46rem) / 0.84 var(--display);
   letter-spacing: -0.075em;
@@ -490,6 +656,7 @@ html.hero-intro-complete .hero-description {
 
 .hero-nav-right {
   justify-content: flex-end;
+  gap: clamp(0.45rem, 0.8vw, 1rem);
 }
 
 .hero-nav-group a {
@@ -996,7 +1163,70 @@ html.hero-intro-complete .hero-description {
 
 /* Shared sections */
 .section {
+  position: relative;
+  overflow: clip;
   padding: clamp(6rem, 9vw, 10rem) 0;
+}
+
+/* GPU-friendly layers for reversible, scroll-scrubbed parallax. */
+.about-word,
+.about-portrait img,
+.about-copy,
+.work-title-block,
+.work-description,
+.project-media,
+.project-copy,
+.services-heading,
+.service-list,
+.process .section-heading,
+.process-grid,
+.expect-heading,
+.expect-list,
+.faq-heading,
+.accordion,
+.contact-intro,
+.contact-form {
+  will-change: transform;
+}
+
+.service-row,
+.process-grid > li,
+.expect-list > div,
+.accordion > details {
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-word,
+  .about-portrait img,
+  .about-copy,
+  .work-title-block,
+  .work-description,
+  .project-media,
+  .project-copy,
+  .services-heading,
+  .service-list,
+  .process .section-heading,
+  .process-grid,
+  .expect-heading,
+  .expect-list,
+  .faq-heading,
+  .accordion,
+  .contact-intro,
+  .contact-form {
+    will-change: auto;
+    transform: none !important;
+  }
+
+  .service-row,
+  .process-grid > li,
+  .expect-list > div,
+  .accordion > details {
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
 }
 
 .section-kicker {
@@ -1056,6 +1286,12 @@ html.hero-intro-complete .hero-description {
 .js .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* ScrollTrigger owns these wrappers; keep the generic reveal transition from
+   competing for the same opacity and transform while a scene is scrubbing. */
+.js .reveal.scroll-scene-target {
+  transition: none;
 }
 
 /* Per-element typography motion used throughout the scrolling content. */
@@ -1457,43 +1693,87 @@ html.hero-intro-complete .hero-description {
 }
 
 @media (min-width: 1101px) {
-  body.rail-visible .work .work-shell {
-    width: min(calc(100vw - var(--rail-shell-offset)), 92rem);
-  }
-
+  /* Work already has permanent rail-safe geometry in the desktop layout block
+     above. That geometry must not depend on `.rail-visible`, because the pin is
+     measured before the Home-to-About transition reveals the sidebar. */
   .work {
     position: relative;
-    height: var(--work-scroll-height, 250vh);
+    isolation: isolate;
+    width: 100%;
+    height: calc(100vh + var(--work-natural-settle, 0px));
+    min-height: calc(100vh + var(--work-natural-settle, 0px));
+    overflow: hidden;
     padding-top: 0;
     padding-bottom: 0;
+    background: var(--text-dark);
+  }
+
+  .work.is-work-pinned {
+    z-index: 100;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fixed pinning can inject width/left styles on the Work section. The shell
+     remains the single source of truth for the rail-safe content boundary. */
+  .work.is-work-pinned .work-shell {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: var(--work-content-inset) !important;
+  }
+
+  /* The reference keeps the Projects intro locked in place while only the
+     horizontal card track moves. These guards prevent stale parallax inline
+     transforms or pin compositing from shifting the heading/description. */
+  .work.is-work-pinned .work-title-block,
+  .work.is-work-pinned .work-description,
+  .work.is-work-pinned .project-media,
+  .work.is-work-pinned .project-copy {
+    translate: none !important;
+  }
+
+  .work.is-work-pinned .work-title-block,
+  .work.is-work-pinned .work-description {
+    transform: none !important;
+    filter: none !important;
   }
 
   .work-shell {
-    position: sticky;
-    top: 0;
+    /* Keep the heading in its own top region and reserve the remaining
+       viewport height for a vertically centered, fully visible card row. */
+    position: relative;
+    top: auto;
     isolation: isolate;
-    height: 100vh;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(20rem, 43vh) 1fr;
-    align-content: stretch;
+    height: calc(100vh + var(--work-natural-settle, 0px));
+    min-height: calc(100vh + var(--work-natural-settle, 0px));
+    display: block;
     overflow: hidden;
-    padding-top: clamp(2.5rem, 5vh, 4.5rem);
-    padding-bottom: clamp(1.5rem, 3vh, 2.5rem);
+    padding-top: clamp(2rem, 4vh, 3.5rem);
+    padding-bottom: clamp(2.5rem, 4.5vh, 4.5rem);
+  }
+
+  .work-intro {
+    position: relative;
+    z-index: 5;
   }
 
   .project-grid {
+    position: absolute;
+    top: var(--work-cards-top, clamp(24rem, 52vh, 34rem));
+    right: auto;
+    bottom: auto;
+    left: 0;
     width: max-content;
-    height: 100%;
+    height: var(--work-card-height, clamp(26rem, 58vh, 38.75rem));
+    min-height: 0;
     display: flex;
-    justify-self: start;
     align-items: center;
     gap: clamp(1.25rem, 2.08vw, 2rem);
-    padding: 0 clamp(1.5rem, 2.5vw, 2.5rem) 0 55%;
-    transform: translate3d(var(--project-travel, 0), clamp(-3rem, -4vh, -1.75rem), 0);
+    padding: 0;
     backface-visibility: hidden;
     will-change: transform;
+    transform-style: preserve-3d;
   }
 
   .project,
@@ -1502,8 +1782,8 @@ html.hero-intro-complete .hero-description {
   .project-three {
     position: relative;
     width: clamp(17rem, 27vw, 30rem);
-    height: min(64vh, 42rem);
-    min-height: 27rem;
+    height: 100%;
+    min-height: 0;
     flex: 0 0 clamp(17rem, 27vw, 30rem);
     display: block;
     overflow: hidden;
@@ -1612,15 +1892,10 @@ html.hero-intro-complete .hero-description {
     transform: none;
   }
 
+  /* The reference does not place a progress rule across the project cards.
+     The global top progress bar remains available without covering controls. */
   .work-shell::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: .35rem;
-    left: 0;
-    z-index: 2;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent-yellow) calc(var(--work-progress, 0) * 100%), rgba(255,255,255,.12) 0);
+    display: none;
   }
 }
 
@@ -1640,9 +1915,14 @@ html.hero-intro-complete .hero-description {
   .rail-cta { min-height: 2.7rem; }
 
   .work-shell {
-    grid-template-rows: minmax(15rem, 37vh) 1fr;
-    padding-top: 1.8rem;
-    padding-bottom: 1.25rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .project-grid {
+    top: var(--work-cards-top, 24rem);
+    bottom: auto;
+    height: var(--work-card-height, 27rem);
   }
 
   .work-intro h2 {
@@ -1653,8 +1933,8 @@ html.hero-intro-complete .hero-description {
   .project-one,
   .project-two,
   .project-three {
-    height: 55vh;
-    min-height: 18rem;
+    height: 100%;
+    min-height: 0;
   }
 }
 
@@ -1901,7 +2181,7 @@ html.hero-intro-complete .hero-description {
   color: var(--text-light);
 }
 
-.process-grid span {
+.process-grid > li > span {
   color: var(--text-dark);
   font: 400 clamp(4rem, 7vw, 7rem) / 0.8 var(--display);
   letter-spacing: -0.08em;
@@ -1909,7 +2189,7 @@ html.hero-intro-complete .hero-description {
   transition: color 0.3s;
 }
 
-.process-grid li:hover span {
+.process-grid > li:hover > span {
   color: var(--accent-yellow);
 }
 
@@ -1981,12 +2261,12 @@ html.hero-intro-complete .hero-description {
   color: var(--text-dark);
 }
 
-.expect-list span {
+.expect-list > div > span {
   color: var(--accent-yellow);
   font-weight: 800;
 }
 
-.expect-list > div:hover span {
+.expect-list > div:hover > span {
   color: var(--text-dark);
 }
 
@@ -2060,7 +2340,7 @@ html.hero-intro-complete .hero-description {
   display: none;
 }
 
-.accordion summary span {
+.accordion summary > span[aria-hidden="true"] {
   display: grid;
   width: 2.5rem;
   height: 2.5rem;
@@ -2073,7 +2353,7 @@ html.hero-intro-complete .hero-description {
   transition: transform 0.25s;
 }
 
-.accordion details[open] summary span {
+.accordion details[open] summary > span[aria-hidden="true"] {
   transform: rotate(45deg);
 }
 
@@ -2222,7 +2502,7 @@ html.hero-intro-complete .hero-description {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 4rem;
   align-items: start;
 }
@@ -2273,25 +2553,40 @@ html.hero-intro-complete .hero-description {
   margin: 1rem 0 0;
 }
 
+.footer-end a {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 /* Video dialog */
 .video-dialog {
-  width: 100%;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
   max-width: none;
-  height: 100%;
+  height: 100dvh;
   max-height: none;
-  padding: 0;
+  margin: 0;
+  padding: clamp(.75rem, 1.7vw, 1.5rem);
   border: 0;
-  background: rgba(17, 17, 17, 0.92);
+  overflow: hidden;
+  background: rgba(17, 17, 17, 0.94);
   color: var(--text-light);
 }
 
 .video-dialog::backdrop {
-  background: rgba(17, 17, 17, 0.92);
+  background: rgba(17, 17, 17, 0.94);
 }
 
 .dialog-panel {
-  width: min(92vw, 78rem);
-  margin: 3vh auto;
+  width: min(96vw, 88rem);
+  height: 100%;
+  max-height: calc(100dvh - clamp(1.5rem, 3.4vw, 3rem));
+  margin: 0 auto;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(.55rem, 1.2vh, .9rem);
 }
 
 .dialog-panel header {
@@ -2299,7 +2594,12 @@ html.hero-intro-complete .hero-description {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  margin-bottom: 1rem;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.dialog-panel header > div {
+  min-width: 0;
 }
 
 .dialog-panel header p,
@@ -2312,26 +2612,36 @@ html.hero-intro-complete .hero-description {
 }
 
 .dialog-panel h2 {
+  max-width: min(72vw, 58rem);
   margin: 0.2rem 0 0;
-  font: 400 clamp(1.5rem, 3vw, 2.8rem) / 1 var(--display);
-  letter-spacing: -0.05em;
+  overflow: hidden;
+  font: 400 clamp(1.25rem, 2.35vw, 2.35rem) / 1.04 var(--display);
+  letter-spacing: -0.045em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dialog-panel header button {
   display: grid;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: clamp(2.75rem, 4vw, 3.2rem);
+  height: clamp(2.75rem, 4vw, 3.2rem);
+  flex: 0 0 auto;
   place-items: center;
   border: 1px solid var(--text-light);
   border-radius: 50%;
   background: var(--accent-yellow);
   color: var(--text-dark);
-  font-size: 1.7rem;
+  font-size: 1.55rem;
 }
 
 .video-wrap {
   display: grid;
-  height: 79vh;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: calc(100dvh - 8rem);
+  justify-self: center;
   place-items: center;
   overflow: hidden;
   border: 1px solid rgba(248, 247, 242, 0.18);
@@ -2339,14 +2649,31 @@ html.hero-intro-complete .hero-description {
   background: #000;
 }
 
+.video-wrap[data-orientation="portrait"] {
+  width: min(100%, 34rem);
+}
+
+.video-wrap[data-orientation="square"] {
+  width: min(100%, 54rem);
+}
+
+.video-wrap[data-orientation="landscape"] {
+  width: min(100%, 88rem);
+}
+
 .video-wrap video {
+  display: block;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   object-fit: contain;
+  object-position: center;
+  background: #000;
 }
 
 .dialog-panel > p {
-  margin-top: 0.8rem;
+  margin-top: 0;
 }
 
 /* Tablet navigation and composition */
@@ -2370,6 +2697,7 @@ html.hero-intro-complete .hero-description {
 
   .mobile-brand {
     display: inline-flex;
+    min-height: 44px;
     align-items: center;
     gap: 0.7rem;
     text-decoration: none;
@@ -2448,6 +2776,9 @@ html.hero-intro-complete .hero-description {
   }
 
   .mobile-menu > a:not(.button) {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
     font: 400 clamp(2rem, 7vw, 4.2rem) / 0.95 var(--display);
     letter-spacing: -0.06em;
     text-decoration: none;
@@ -2495,6 +2826,57 @@ html.hero-intro-complete .hero-description {
 
   .process-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet hero: the shared Home/About stage switches back to normal document
+   flow below 1101px. Give the hero an explicit viewport-height floor here so
+   it cannot collapse to the desktop 43rem minimum on tall tablets. */
+@media (min-width: 821px) and (max-width: 1100px) {
+  .hero {
+    height: auto;
+    min-height: max(100svh, 56rem);
+  }
+
+  .hero-name {
+    --name-scale-x: 1.02;
+    --name-scale-y: 1;
+    top: 5.75rem;
+    font-size: 27vw;
+    line-height: 0.86;
+  }
+
+  .hero-portrait {
+    bottom: 8rem;
+    height: min(82svh, 64rem);
+  }
+
+  .hero-center {
+    top: 40%;
+    width: min(calc(100% - 3rem), 46rem);
+  }
+
+  .hero-center h1 {
+    font-size: clamp(4rem, 8.5vw, 5.5rem);
+    line-height: 0.92;
+  }
+
+  .hero-card-project {
+    top: 31%;
+    left: 2rem;
+    width: 13rem;
+  }
+
+  .hero-card-qualities {
+    top: 28%;
+    right: 2rem;
+    left: auto;
+    width: 12.5rem;
+  }
+
+  .hero-card-workflow {
+    top: 65%;
+    left: 2rem;
   }
 }
 
@@ -2790,7 +3172,7 @@ html.hero-intro-complete .hero-description {
   }
 
   .video-wrap {
-    height: 74vh;
+    height: auto;
   }
 }
 
@@ -2877,7 +3259,7 @@ html.hero-intro-complete .hero-description {
   }
 
   .video-wrap {
-    height: 70vh;
+    height: auto;
   }
 }
 
@@ -3020,412 +3402,1568 @@ html.hero-intro-complete .hero-description {
   }
 }
 
-/* Home <-> About cinematic shared-element transition */
-.page-shell {
-  --home-about-duration: 1.75s;
-  --home-about-ease: cubic-bezier(.76, 0, .24, 1);
+/* Continuous Home / About ScrollTrigger scene */
+.home-about-scene {
+  position: relative;
+  background: var(--background);
+  overflow-anchor: none;
 }
 
-html.is-scroll-locked,
-body.is-transitioning {
-  overflow: hidden !important;
-  overscroll-behavior: none;
+.home-about-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--background);
 }
 
-/* Preserve the exact About base colour beneath the transparent cinematic
-   layers. Its opacity is scrubbed with the route so the stable handoff never
-   changes shade while the blurred portrait can remain visible above it. */
-body.is-transitioning::before {
-  content: "";
+.home-about-stage #home,
+.home-about-stage #about {
+  backface-visibility: hidden;
+}
+
+.home-about-stage #about [data-transition-reveal] {
+  transition: none;
+  clip-path: none;
+  will-change: transform, opacity;
+}
+
+.scene-shared-clone {
   position: fixed;
-  z-index: 2300;
-  inset: 3px 0 0;
-  background: var(--background-secondary);
-  opacity: var(--about-background-progress, 0);
+  z-index: 2750;
+  display: block;
+  max-width: none;
+  margin: 0;
   pointer-events: none;
+  transform-origin: 0 0;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
 }
 
-body.is-transitioning .desktop-rail,
-body.is-transitioning .hero-nav,
-body.is-transitioning main > .section,
-body.is-transitioning .footer,
-body.is-transitioning .flip-source,
-body.is-transitioning .flip-target {
+.scene-shared-clone * {
   animation: none !important;
   transition: none !important;
 }
 
-body.is-transitioning .hero,
-body.is-transitioning .desktop-rail,
-body.is-transitioning #about {
-  pointer-events: none;
-}
-
-/* Preserve the Home artwork's real depth order during the final reverse
-   handoff. The moving VINCE clone lives at z-index 2350; temporarily release
-   the hero's isolation so the returning portrait and cards can remain in
-   front of it before the clones are removed. */
-body.is-transitioning.transition-to-home .hero {
-  isolation: auto;
-}
-
-body.is-transitioning.transition-to-home .hero-portrait {
-  z-index: 2460;
-}
-
-body.is-transitioning.transition-to-home .hero-cards {
-  z-index: 2470;
-}
-
-body.is-transitioning.transition-to-home .hero-identity,
-body.is-transitioning.transition-to-home .hero-description {
-  z-index: 2480;
-}
-
-body.is-transitioning.transition-to-home .hero-center {
-  z-index: 2560;
-}
-
-body.is-transitioning.transition-to-home .hero-nav {
-  z-index: 2780;
-}
-
-/* On the About -> Home route the hero-nav links are the visible FLIP copies.
-   Keep their parent painted while the rail is still present; otherwise the
-   global rail-visible rule hides the traveling labels and they pop in only
-   after the final handoff. */
-body.is-transitioning.transition-to-home.rail-visible .hero-nav {
-  opacity: 1 !important;
-}
-
-body.is-transitioning .hero-name,
-body.is-transitioning .hero-center,
-body.is-transitioning .hero-cards,
-body.is-transitioning .hero-identity,
-body.is-transitioning .hero-description,
-body.is-transitioning .hero-portrait img,
-body.is-transitioning #about,
-body.is-transitioning #about [data-transition-reveal],
-body.is-transitioning .desktop-rail {
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-}
-
-body.is-transitioning .desktop-rail,
-body.is-transitioning .rail-card,
-body.is-transitioning .rail-email,
-body.is-transitioning .rail-menu {
-  overflow: visible !important;
-}
-
-body.is-transitioning .desktop-rail .rail-card,
-body.is-transitioning .desktop-rail .rail-email {
-  isolation: isolate;
-  border-color: transparent !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-body.is-transitioning .desktop-rail .rail-card::after,
-body.is-transitioning .desktop-rail .rail-email::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  border: 1px solid rgba(255,255,255,.42);
-  border-radius: inherit;
-  background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.07));
-  box-shadow: none;
-  opacity: var(--rail-shell-progress, 1);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  pointer-events: none;
-}
-
-body.is-transitioning .desktop-rail .rail-card::before,
-body.is-transitioning .desktop-rail .rail-email::before {
-  opacity: var(--rail-shell-progress, 1);
-}
-
-.portrait-transition-clone {
-  position: fixed;
-  z-index: 2450;
-  display: block;
-  max-width: none;
-  object-fit: contain;
-  object-position: center bottom;
-  pointer-events: none;
-  transform-origin: 50% 95%;
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  image-rendering: auto;
-}
-
-.name-transition-clone {
-  position: fixed;
-  /* The VINCE wordmark stays behind the portrait during the morph. */
+.scene-name-clone {
   z-index: 2350;
-  display: block;
-  max-width: none;
-  margin: 0;
   overflow: visible;
   color: var(--accent-yellow);
   font-family: var(--display);
   letter-spacing: -.075em;
   line-height: .84;
   white-space: nowrap;
-  pointer-events: none;
-  transform-origin: 0 0;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
-.headline-transition-clone {
-  position: fixed;
+/* The first part of the VINCE travel stays inside the Hero stacking context,
+   preserving the original depth behind the portrait, headline, cards, and
+   navigation. It is swapped pixel-for-pixel with the fixed clone only after
+   those foreground layers have cleared. */
+.scene-name-underlay-clone {
+  position: absolute;
+  z-index: 11;
+}
+
+.scene-portrait-clone {
+  z-index: 2450;
+  object-fit: contain;
+  object-position: center bottom;
+  transform-origin: 50% 95%;
+}
+
+.scene-headline-clone {
   z-index: 2550;
-  display: block;
-  margin: 0;
   overflow: visible;
-  pointer-events: none;
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
-.headline-transition-clone span {
+.scene-headline-clone span {
   display: block;
 }
 
-body.is-transitioning #about {
-  position: fixed;
-  z-index: 2200;
-  inset: 3px 0 0;
-  width: 100%;
-  height: calc(100svh - 3px);
-  min-height: 0;
-  overflow: hidden;
-  padding-top: clamp(3.5rem, 6.5vh, 5.5rem);
-  padding-bottom: 2rem;
-  visibility: visible;
-  contain: layout paint style;
+.scene-stat-clone {
+  z-index: 2740;
+  overflow: visible;
 }
 
-body.is-transitioning #about .section-heading {
-  margin-bottom: clamp(2rem, 4vh, 3.5rem);
-}
-
-body.is-transitioning #about .section-heading h2 {
-  font-size: clamp(3.4rem, 6vw, 6.8rem);
-}
-
-body.is-transitioning #about .about-grid {
-  grid-template-columns: minmax(17rem, .72fr) minmax(24rem, 1.28fr);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
-}
-
-body.is-transitioning #about .about-portrait {
-  min-height: min(47vh, 30rem);
-}
-
-body.is-transitioning #about .about-copy {
-  max-height: 48vh;
-  overflow: hidden;
-}
-
-body.is-transitioning #about .about-lead {
-  font-size: clamp(1.5rem, 2.6vw, 2.65rem);
-}
-
-body.is-transitioning #about [data-transition-reveal] {
-  transition: none !important;
-  clip-path: none !important;
-  will-change: transform, opacity;
-}
-
-body.is-transitioning .hero-card {
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  animation: none !important;
-  transition: none !important;
+.scene-nav-clone,
+.scene-cta-clone {
+  z-index: 2770;
+  white-space: nowrap;
 }
 
 @media (min-width: 1101px) {
-  body.is-transitioning #about {
-    z-index: 2480;
-    background: transparent;
+  .home-about-scene {
+    height: 100svh;
   }
 
-  html.motion-ready .page-shell:not(.is-about-mode) .flip-target,
-  html.motion-ready .page-shell.is-about-mode .flip-source {
-    display: none;
+  .home-about-stage {
+    height: 100svh;
+    min-height: 43rem;
   }
 
-  /* During the manual About -> Home scrub, keep the real rail content in
-     layout while its fixed visual clones travel back to the hero. Removing
-     these nodes with display:none collapses the stat/menu cards on the first
-     wheel tick and makes the reverse appear to start from a shifted state. */
-  html.motion-ready .page-shell.is-transitioning.transition-to-home .rail-menu .flip-target {
-    display: inline;
-    visibility: hidden;
+  .home-about-stage #home,
+  .home-about-stage #about {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
   }
 
-  html.motion-ready .page-shell.is-transitioning.transition-to-home .rail-stats .flip-target {
-    display: grid;
-    visibility: hidden;
+  .home-about-stage #about {
+    z-index: 40;
+    overflow: hidden;
+    padding: clamp(3.5rem, 6.5vh, 5.5rem) 0 2rem var(--rail-page-offset);
+    background: var(--background-secondary);
   }
 
-  html.motion-ready .page-shell.is-transitioning.transition-to-home .rail-cta.flip-target {
-    display: grid;
-    visibility: hidden;
-  }
-
-  html[data-initial-view="about"]:not(.motion-ready) .desktop-rail {
-    opacity: 1;
-    transform: none;
-  }
-
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-portrait,
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-name,
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-center,
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-card-qualities,
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-identity,
-  .page-shell.is-about-mode:not(.is-transitioning) .hero-scroll {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .page-shell.is-about-mode #about {
-    padding-top: clamp(3.5rem, 6.5vh, 5.5rem);
-  }
-
-  .page-shell.is-about-mode #about .section-heading {
-    grid-template-columns: 1fr;
-    gap: clamp(.75rem, 1.4vh, 1.25rem);
-    margin-bottom: clamp(2.25rem, 4.5vh, 3.75rem);
-  }
-
-  .page-shell.is-about-mode #about .section-heading > div {
-    grid-template-columns: minmax(0, 1.28fr) minmax(18rem, .72fr);
-    gap: clamp(2rem, 4vw, 4rem);
-    align-items: end;
-  }
-
-  .page-shell.is-about-mode #about .section-heading h2 {
-    font-size: clamp(3.4rem, 6vw, 6.8rem);
-  }
-
-  .page-shell.is-about-mode #about .about-grid {
-    grid-template-columns: minmax(17rem, .8fr) minmax(24rem, 1.2fr);
-    gap: clamp(2.5rem, 5vw, 5rem);
-    align-items: start;
-  }
-
-  body.is-transitioning #about .shell {
-    /* Match the rail-visible section shell exactly. A 74rem cap resolves to
-       1184px at the default root size, which caused a subtle 2px-per-side
-       jump in the About copy when the transition handed off. */
+  .home-about-stage #about .shell {
     width: min(calc(100vw - var(--rail-shell-offset)), 1180px);
   }
 
-  /* The animated About view uses the exact stable layout so completing the
-     transition cannot reflow the heading, portrait, or copy. */
-  body.is-transitioning #about .section-heading {
+  .home-about-stage #about .section-heading {
     grid-template-columns: 1fr;
     gap: clamp(.75rem, 1.4vh, 1.25rem);
     margin-bottom: clamp(2.25rem, 4.5vh, 3.75rem);
   }
 
-  body.is-transitioning #about .section-heading > div {
+  .home-about-stage #about .section-heading > div {
     grid-template-columns: minmax(0, 1.28fr) minmax(18rem, .72fr);
     gap: clamp(2rem, 4vw, 4rem);
     align-items: end;
   }
 
-  body.is-transitioning #about .about-grid {
+  .home-about-stage #about .section-heading h2 {
+    font-size: clamp(3.4rem, 6vw, 6.8rem);
+  }
+
+  .home-about-stage #about .about-grid {
     grid-template-columns: minmax(17rem, .8fr) minmax(24rem, 1.2fr);
     gap: clamp(2.5rem, 5vw, 5rem);
     align-items: start;
   }
 
-  body.is-transitioning #about .about-portrait {
+  .home-about-stage #about .about-portrait {
     min-height: 42rem;
   }
 
-  body.is-transitioning #about .about-copy {
+  .home-about-stage #about .about-copy {
     max-height: none;
     overflow: visible;
   }
 
-  body.is-transitioning #about .about-lead {
+  .home-about-stage #about .about-lead {
     font-size: clamp(1.7rem, 3.2vw, 3.4rem);
     line-height: 1.08;
-    letter-spacing: -0.045em;
+    letter-spacing: -.045em;
+  }
+
+  body.home-about-enabled .desktop-rail {
+    transform: none;
+    transition: none;
+  }
+
+  body.home-about-enabled .hero-nav,
+  body.home-about-enabled main > .section,
+  body.home-about-enabled .footer {
+    transition: none;
+  }
+
+  html[data-initial-layout="content"]:not(.motion-ready) .home-about-stage #home {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  body.is-booting-content .home-about-stage #home {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  body.is-booting-content .home-about-stage #about {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  html[data-initial-layout="content"]:not(.motion-ready) .home-about-stage #about,
+  html[data-initial-layout="content"]:not(.motion-ready) .desktop-rail {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  html[data-initial-layout="content"]:not(.motion-ready) .desktop-rail {
+    pointer-events: auto;
+  }
+
+  html[data-initial-layout="hero"]:not(.motion-ready) .home-about-stage #about,
+  html[data-initial-layout="hero"]:not(.motion-ready) .desktop-rail {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Give each lower chapter enough physical travel for its existing scenes. */
+  .expect,
+  .services,
+  .process,
+  .faq {
+    padding-block: clamp(9rem, 14vh, 13rem);
+  }
+
+  .expect,
+  .process,
+  .faq {
+    min-height: 125vh;
+  }
+
+  .continuous-scroll-scene > .shell {
+    transform-style: preserve-3d;
   }
 }
 
 @media (max-width: 1100px) {
-  .portrait-transition-clone {
-    z-index: 1850;
+  .desktop-rail {
+    display: none;
   }
 
-  .flip-target {
+  .home-about-stage {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .home-about-stage #home,
+  .home-about-stage #about {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+  }
+
+  .scene-shared-clone {
     display: none !important;
   }
+}
 
-  body.is-transitioning #about {
-    z-index: 1750;
-    top: 4.5rem;
-    height: calc(100svh - 4.5rem);
-    padding-top: clamp(2.5rem, 5vh, 4rem);
+@media (min-width: 1101px) and (prefers-reduced-motion: reduce) {
+  .home-about-scene {
+    height: auto;
+  }
+
+  .home-about-stage {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .home-about-stage #home,
+  .home-about-stage #about {
+    position: relative;
+    inset: auto;
+    height: auto;
+    min-height: 43rem;
+  }
+
+  .home-about-stage #about {
+    min-height: 100svh;
+    overflow: clip;
+  }
+
+  .scene-shared-clone {
+    display: none !important;
+  }
+}
+
+/* Per-card adaptive glass refinement: every rail surface owns its own sampled
+   light/dark mix. No parent theme class may recolor all cards together. */
+@media (min-width: 1101px) {
+  .desktop-rail.rail-on-dark,
+  .desktop-rail.rail-project-mode {
+    color: var(--text-dark);
+  }
+
+  .desktop-rail .rail-card,
+  .desktop-rail .rail-email {
+    isolation: isolate;
+    background-clip: padding-box;
+    transform: translateZ(0);
+  }
+
+  .home-about-stage #about {
+    min-height: 100svh;
+  }
+}
+
+
+/* Projects reference alignment: natural pre-pin settle + larger cards */
+@media (min-width: 1101px) {
+  .work {
+    height: calc(100vh + var(--work-natural-settle, 3.5rem));
+    min-height: calc(100vh + var(--work-natural-settle, 3.5rem));
+  }
+
+  .work-shell {
+    /* The Work section is pinned only after its natural vertical settle. At
+       pin start the section sits above the viewport by that settle distance,
+       so a plain 100vh shell ends early and clips the bottom of every card.
+       Match the shell to the full section height so its clipping boundary
+       remains at the real viewport bottom throughout the horizontal scene. */
+    height: calc(100vh + var(--work-natural-settle, 3.5rem));
+    min-height: calc(100vh + var(--work-natural-settle, 3.5rem));
+  }
+
+  .project-grid {
+    top: clamp(15rem, 26vh, 18rem);
+    bottom: clamp(2rem, 3vh, 3rem);
+    gap: clamp(1.5rem, 2.2vw, 2.4rem);
+  }
+
+  .project,
+  .project-one,
+  .project-two,
+  .project-three {
+    /* The reference cards are portrait cards at approximately 5:7, not 4:2.
+       Their width now derives from the measured card height, so the Projects
+       scene keeps its existing vertical geometry while revealing more of each
+       thumbnail instead of forcing a wide crop. */
+    width: auto;
+    height: clamp(34rem, 68vh, 44rem);
+    aspect-ratio: 5 / 7;
+    flex: 0 0 auto;
+    translate: none;
+  }
+
+  .project:hover,
+  .project:focus-within {
+    translate: none;
+    border-color: rgba(248,247,242,.32);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,.22);
+  }
+
+  .project-copy {
+    padding: 6.5rem 5.8rem 1.55rem 1.55rem;
+  }
+
+  .project-copy h3 {
+    margin-bottom: .6rem;
+    font-size: clamp(2.2rem, 2.8vw, 3.4rem);
+    line-height: .92;
+  }
+
+  .project-copy > p:not(.project-meta) {
+    font-size: clamp(.9rem, 1vw, 1.08rem);
+    -webkit-line-clamp: 2;
+  }
+
+  .play-button {
+    right: 1.35rem;
+    bottom: 1.35rem;
+    left: auto;
+    width: 3.35rem;
+    height: 3.35rem;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    opacity: 1;
+    transform: none;
+    font-size: 0;
+    box-shadow: 0 .45rem 1rem rgba(0,0,0,.2);
+  }
+
+  .play-button i {
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  .project-media:hover .play-button,
+  .project-media:focus-visible .play-button {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  .project-link {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1101px) and (max-height: 760px) {
+  .project-grid {
+    top: clamp(12.5rem, 24vh, 14.5rem);
+    bottom: 1.5rem;
+  }
+
+  .project,
+  .project-one,
+  .project-two,
+  .project-three {
+    width: auto;
+    height: clamp(28rem, 66vh, 34rem);
+    aspect-ratio: 5 / 7;
+    flex: 0 0 auto;
+  }
+}
+
+/* Text-layout safeguard for the Expectations, Process, and FAQ chapters.
+   These sections share a rail-reduced desktop shell, so viewport-sized display
+   type can outgrow its grid column. Keep every heading inside its own column
+   without changing the wording or the existing scroll/reveal behavior. */
+@media (min-width: 1101px) {
+  .expect-grid,
+  .faq-grid {
+    grid-template-columns: minmax(0, 29rem) minmax(0, 1fr);
+    gap: clamp(3rem, 4.5vw, 5rem);
+  }
+
+  .expect-heading,
+  .faq-heading,
+  .expect-list,
+  .accordion,
+  .process .section-heading,
+  .process .section-heading > div,
+  .process .section-heading h2 {
+    min-width: 0;
+  }
+
+  .expect-heading h2 {
+    max-width: 100%;
+    font-size: clamp(3.5rem, 4.2vw, 5rem);
+    line-height: .91;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .faq-heading h2 {
+    max-width: 100%;
+    font-size: clamp(3.7rem, 4.5vw, 5.35rem);
+    line-height: .91;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .expect-heading h2 em,
+  .faq-heading h2 em {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .process .section-heading {
+    grid-template-columns: minmax(10rem, 12rem) minmax(0, 1fr);
+    gap: clamp(2rem, 3vw, 3.25rem);
+  }
+
+  .process .section-heading > div {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+    gap: clamp(2rem, 3.5vw, 3.75rem);
+  }
+
+  .process .section-heading h2 {
+    max-width: 9ch;
+    font-size: clamp(3.8rem, 5vw, 6rem);
+    line-height: .96;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .process .section-heading h2 em {
+    line-height: inherit;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+}
+
+/* The rail is removed at tablet widths, but the former two-column headings
+   were still too narrow. Stack them before the mobile breakpoint so no title
+   can run into its adjacent list or accordion. */
+@media (min-width: 821px) and (max-width: 1100px) {
+  .expect-grid,
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .expect-heading {
+    position: static;
+  }
+
+  .expect-heading h2,
+  .faq-heading h2 {
+    max-width: 9ch;
+    font-size: clamp(4rem, 9vw, 6rem);
+    line-height: .92;
+  }
+
+  .process .section-heading {
+    grid-template-columns: minmax(8rem, 10rem) minmax(0, 1fr);
+  }
+
+  .process .section-heading h2 {
+    max-width: 9ch;
+    font-size: clamp(4rem, 8vw, 5.75rem);
+    line-height: .96;
+  }
+}
+
+
+/* Scroll-masked typography motion
+   The selected chapter copy reveals line-by-line from a clipped baseline,
+   matching the supplied About reference while keeping the final layout fixed. */
+.motion-mask-title {
+  overflow: visible;
+}
+
+.motion-mask-line,
+.motion-mask-block {
+  display: block;
+  overflow: hidden;
+  padding-block: .09em .12em;
+  margin-block: -.09em -.12em;
+}
+
+.motion-mask-line {
+  width: max-content;
+  max-width: 100%;
+}
+
+.motion-mask-inner {
+  display: block;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+}
+
+.motion-mask-line-accent {
+  padding-inline: .1em;
+  margin-inline: -.1em;
+}
+
+/* Preserve the exact display typography after replacing BR tags with masked
+   line wrappers. */
+.motion-mask-title .motion-mask-line + .motion-mask-line {
+  margin-top: -.02em;
+}
+
+.work-intro .motion-mask-line,
+.services-heading .motion-mask-line {
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-mask-inner {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+
+/* Word-by-word scroll reveal
+   Each selected word owns its own clipped mask so the motion is readable,
+   slower, and reversible without changing the final typography or wrapping. */
+.word-reveal-target {
+  position: relative;
+}
+
+.word-reveal-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-block: .1em .16em;
+  margin-block: -.1em -.16em;
+  vertical-align: baseline;
+}
+
+.word-reveal-word {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+/* Word wrappers must remain typographically neutral. Number styles in the
+   Expectations and Process grids apply only to their direct number cells. */
+.expect-list .word-reveal-mask,
+.expect-list .word-reveal-word,
+.process-grid .word-reveal-mask,
+.process-grid .word-reveal-word {
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  -webkit-text-stroke: 0;
+}
+
+.accordion summary .summary-label {
+  display: block;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.word-reveal-item {
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal-word {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+}
+
+/* Automatic section-level word reveal. Timelines play once a chapter becomes
+   active and reverse when navigating upward; layout remains unchanged. */
+.automatic-word-target,
+.automatic-word-section {
+  backface-visibility: hidden;
+}
+
+
+/* Structural visibility guard for automatic word-reveal chapters.
+   The words own the motion; their parent .reveal wrappers must remain visible.
+   About and Work are intentionally excluded because their dedicated cinematic
+   and pinned timelines still own those parent wrappers. */
+.js .automatic-word-section:not(#about):not(#work)
+  .reveal.automatic-word-container {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+
+/* Process heading refinement — scoped only to the Process intro.
+   Keeps the approved layout and animation logic while replacing the stacked
+   yellow blocks with a cleaner two-line headline and marker-style highlight. */
+@media (min-width: 1101px) {
+  .process .section-heading > div {
+    grid-template-columns: minmax(0, 1.35fr) minmax(15rem, .65fr);
+    gap: clamp(2.25rem, 4vw, 4.5rem);
+    align-items: center;
+  }
+
+  .process .section-heading h2 {
+    max-width: none;
+    font-size: clamp(3.35rem, 4.4vw, 5.25rem);
+    line-height: .92;
+    letter-spacing: -.065em;
+  }
+
+  .process .section-heading h2 em {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 0 .045em .035em;
+    background:
+      linear-gradient(
+        to top,
+        var(--accent-yellow) 0 43%,
+        transparent 43% 100%
+      );
+    color: var(--text-dark);
+    box-decoration-break: initial;
+    -webkit-box-decoration-break: initial;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1100px) {
+  .process .section-heading > div {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .process .section-heading h2 {
+    max-width: none;
+    font-size: clamp(3.45rem, 6.3vw, 5rem);
+    line-height: .92;
+  }
+
+  .process .section-heading h2 em {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 0 .045em .035em;
+    background:
+      linear-gradient(
+        to top,
+        var(--accent-yellow) 0 43%,
+        transparent 43% 100%
+      );
+    box-decoration-break: initial;
+    -webkit-box-decoration-break: initial;
   }
 }
 
 @media (max-width: 820px) {
-  body.is-transitioning #about .section-heading {
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  body.is-transitioning #about .section-heading h2 {
-    font-size: clamp(2.8rem, 13vw, 4.6rem);
-  }
-
-  body.is-transitioning #about .about-grid {
-    display: block;
-  }
-
-  body.is-transitioning #about .about-portrait,
-  body.is-transitioning #about .about-facts,
-  body.is-transitioning #about .toolkit,
-  body.is-transitioning #about .about-copy > p:not(.about-lead) {
-    display: none;
-  }
-
-  body.is-transitioning #about .about-copy {
-    max-height: none;
+  .process .section-heading h2 em {
+    padding-inline: .035em;
+    background:
+      linear-gradient(
+        to top,
+        var(--accent-yellow) 0 43%,
+        transparent 43% 100%
+      );
   }
 }
 
+/* Project case-study modal — reference-inspired three-column presentation.
+   This only replaces the opened-project experience; project cards and page
+   animations retain their existing geometry and behavior. */
+.video-dialog {
+  padding: clamp(.45rem, 1vw, .9rem);
+  overflow: auto;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(56, 56, 49, .22), transparent 42%),
+    rgba(8, 9, 9, .97);
+}
+
+.video-dialog::backdrop {
+  background: rgba(4, 5, 5, .92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dialog-panel.project-case-study {
+  --case-border: rgba(248, 247, 242, .14);
+  --case-muted: rgba(248, 247, 242, .66);
+  position: relative;
+  width: min(100%, 96rem);
+  min-height: calc(100dvh - clamp(.9rem, 2vw, 1.8rem));
+  height: auto;
+  max-height: none;
+  margin: 0 auto;
+  padding: clamp(1.1rem, 2vw, 1.9rem);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(1rem, 1.7vw, 1.5rem);
+  overflow: hidden;
+  border: 1px solid rgba(248, 247, 242, .13);
+  border-radius: clamp(.8rem, 1.2vw, 1.25rem);
+  background:
+    linear-gradient(145deg, rgba(25, 27, 27, .96), rgba(9, 10, 10, .985)),
+    #0c0d0d;
+  box-shadow:
+    0 2rem 6rem rgba(0, 0, 0, .48),
+    inset 0 1px 0 rgba(255, 255, 255, .035);
+  color: var(--text-light);
+}
+
+.project-case-study::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 35% 5%, rgba(255, 255, 10, .035), transparent 23%),
+    linear-gradient(115deg, rgba(255,255,255,.02), transparent 28%, rgba(255,255,255,.012));
+}
+
+.dialog-close {
+  position: absolute;
+  z-index: 8;
+  top: clamp(1rem, 1.7vw, 1.6rem);
+  right: clamp(1rem, 1.7vw, 1.6rem);
+  display: grid;
+  width: clamp(3rem, 4vw, 3.65rem);
+  height: clamp(3rem, 4vw, 3.65rem);
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(17, 17, 17, .8);
+  border-radius: 50%;
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  font: 500 clamp(1.7rem, 2.6vw, 2.25rem) / 1 var(--body);
+  box-shadow: 0 .8rem 2rem rgba(0, 0, 0, .25);
+  transition: transform .25s var(--ease), box-shadow .25s;
+}
+
+.dialog-close:hover {
+  transform: rotate(8deg) scale(1.05);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, .38);
+}
+
+.case-study-layout {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(15.5rem, .86fr) minmax(29rem, 1.55fr) minmax(16.5rem, .88fr);
+  gap: clamp(1.25rem, 2.3vw, 2.6rem);
+  align-items: stretch;
+  padding-right: clamp(3.3rem, 4vw, 4.5rem);
+}
+
+.case-study-left,
+.case-study-right {
+  min-width: 0;
+  min-height: 0;
+  padding: .3rem 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.case-study-left::-webkit-scrollbar,
+.case-study-right::-webkit-scrollbar,
+.dialog-project-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.case-study-kicker {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin: 0 0 .85rem;
+  color: var(--accent-yellow);
+  font-size: clamp(.68rem, .78vw, .82rem);
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.case-study-kicker > span {
+  display: grid;
+  width: 1.45rem;
+  height: 1rem;
+  place-items: center;
+  border-radius: .28rem;
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  font-size: .72rem;
+  box-shadow: 0 0 1rem rgba(255, 255, 10, .26);
+}
+
+.dialog-back {
+  width: max-content;
+  max-width: 100%;
+  padding: .3rem .15rem .3rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-yellow);
+  cursor: pointer;
+  text-align: left;
+  transition: color .2s ease, transform .2s var(--ease);
+}
+
+.dialog-back:hover {
+  color: var(--text-light);
+  transform: translateX(-.18rem);
+}
+
+.dialog-back > span {
+  transition: transform .2s var(--ease), box-shadow .2s ease;
+}
+
+.dialog-back:hover > span {
+  transform: translateX(-.16rem);
+  box-shadow: 0 0 1.25rem rgba(255, 255, 10, .42);
+}
+
+.project-case-study h2 {
+  max-width: 11ch;
+  margin: 0;
+  overflow: visible;
+  color: var(--text-light);
+  font: 400 clamp(2.35rem, 3.35vw, 4rem) / .98 var(--display);
+  letter-spacing: -.055em;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.case-study-summary {
+  max-width: 31ch;
+  margin: clamp(.8rem, 1.2vw, 1.2rem) 0 0;
+  color: var(--case-muted);
+  font-size: clamp(.9rem, 1vw, 1.05rem);
+  line-height: 1.45;
+}
+
+.case-study-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: clamp(1.25rem, 2vw, 2rem) 0 0;
+}
+
+.case-study-metrics > div {
+  min-width: 0;
+  padding: .1rem clamp(.55rem, .9vw, .9rem);
+  border-left: 1px solid var(--case-border);
+}
+
+.case-study-metrics > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.case-study-metrics dt {
+  margin-bottom: .35rem;
+  color: var(--accent-yellow);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.case-study-metrics dd {
+  margin: 0;
+}
+
+.case-study-metrics strong,
+.case-study-metrics span {
+  display: block;
+}
+
+.case-study-metrics strong {
+  color: var(--text-light);
+  font-size: clamp(.82rem, 1vw, 1rem);
+  line-height: 1.08;
+}
+
+.case-study-metrics span {
+  margin-top: .28rem;
+  color: rgba(248, 247, 242, .48);
+  font-size: .57rem;
+  letter-spacing: .05em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.case-study-field,
+.case-study-deliverables {
+  margin-top: clamp(1.15rem, 1.7vw, 1.7rem);
+}
+
+.case-study-field h3,
+.case-study-deliverables h3,
+.case-study-overview h3,
+.case-study-highlights h3 {
+  margin: 0 0 .65rem;
+  color: var(--accent-yellow);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.case-study-field p {
+  margin: 0;
+  padding: .72rem .85rem;
+  border: 1px solid var(--case-border);
+  border-radius: .6rem;
+  color: rgba(248, 247, 242, .78);
+  font-size: .76rem;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.case-study-deliverables ul,
+.case-study-highlights ul {
+  display: grid;
+  gap: .52rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-study-deliverables li,
+.case-study-highlights li {
+  position: relative;
+  padding-left: 1.55rem;
+  color: rgba(248, 247, 242, .72);
+  font-size: clamp(.72rem, .78vw, .82rem);
+  line-height: 1.35;
+}
+
+.case-study-deliverables li::before {
+  content: "✓";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 10, .08);
+  color: var(--accent-yellow);
+  font-size: .65rem;
+  font-weight: 800;
+}
+
+.case-study-quote {
+  margin: clamp(1.1rem, 1.7vw, 1.65rem) 0 0;
+  padding: 1rem 1rem .9rem 2.55rem;
+  border: 1px solid var(--case-border);
+  border-radius: .7rem;
+  background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+}
+
+.case-study-quote::before {
+  content: "“";
+  position: absolute;
+  margin: -.45rem 0 0 -1.85rem;
+  color: var(--accent-yellow);
+  font: 400 2.5rem/1 var(--display);
+}
+
+.case-study-quote p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: clamp(.84rem, .95vw, 1rem);
+  line-height: 1.4;
+}
+
+.case-study-quote cite {
+  display: block;
+  margin-top: .65rem;
+  color: rgba(248, 247, 242, .48);
+  font-size: .7rem;
+  font-style: normal;
+  text-align: right;
+}
+
+.case-study-author {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-top: 1rem;
+}
+
+.case-study-avatar {
+  position: relative;
+  width: 2.8rem;
+  height: 2.8rem;
+  flex: 0 0 2.8rem;
+  overflow: hidden;
+  border: 1px solid var(--case-border);
+  border-radius: 50%;
+  background: var(--background);
+}
+
+.case-study-avatar img {
+  width: 100%;
+  height: 115%;
+  object-fit: contain;
+  object-position: center top;
+}
+
+.case-study-author p {
+  display: grid;
+  gap: .1rem;
+  margin: 0;
+}
+
+.case-study-author strong {
+  font-size: .78rem;
+}
+
+.case-study-author span {
+  color: rgba(248, 247, 242, .48);
+  font-size: .66rem;
+}
+
+.case-study-player {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(24rem, 1fr) auto;
+  align-content: center;
+  gap: .55rem;
+}
+
+.project-case-study .video-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 24rem;
+  height: min(68dvh, 45rem);
+  max-height: none;
+  justify-self: center;
+  overflow: hidden;
+  border: 1px solid rgba(248, 247, 242, .22);
+  border-radius: .95rem .95rem .35rem .35rem;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), transparent 55%),
+    #050505;
+  box-shadow: 0 1.5rem 3rem rgba(0,0,0,.25);
+}
+
+.project-case-study .video-wrap[data-orientation="portrait"] {
+  width: min(100%, 39rem);
+}
+
+.project-case-study .video-wrap[data-orientation="square"] {
+  width: min(100%, 44rem);
+}
+
+.project-case-study .video-wrap[data-orientation="landscape"] {
+  width: 100%;
+  height: min(58dvh, 36rem);
+  align-self: center;
+}
+
+.project-case-study .video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #050505;
+}
+
+.video-badge {
+  position: absolute;
+  z-index: 3;
+  top: .9rem;
+  left: .9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  border: 1px solid rgba(248,247,242,.12);
+  border-radius: 999px;
+  background: rgba(15, 15, 15, .7);
+  color: rgba(248,247,242,.82);
+  font-size: .68rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.video-badge::before {
+  content: "";
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: var(--accent-yellow);
+  box-shadow: 0 0 .7rem rgba(255,255,10,.45);
+}
+
+.video-fullscreen {
+  position: absolute;
+  z-index: 4;
+  top: .85rem;
+  right: .85rem;
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(248,247,242,.22);
+  border-radius: 50%;
+  background: rgba(15,15,15,.7);
+  color: var(--text-light);
+  font-size: 1rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background .2s, color .2s, transform .2s;
+}
+
+.video-fullscreen:hover {
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  transform: scale(1.05);
+}
+
+.dialog-project-strip {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  gap: .45rem;
+  padding: .45rem;
+  overflow-x: auto;
+  border: 1px solid var(--case-border);
+  border-radius: .35rem .35rem .85rem .85rem;
+  background: rgba(255,255,255,.025);
+  scrollbar-width: none;
+}
+
+.dialog-project-thumb {
+  position: relative;
+  min-width: clamp(8.5rem, 10vw, 10.5rem);
+  height: 4.7rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(248,247,242,.13);
+  border-radius: .55rem;
+  background: #111;
+  color: var(--text-light);
+  text-align: left;
+  opacity: .6;
+  transition: opacity .2s, border-color .2s, transform .2s;
+}
+
+.dialog-project-thumb:hover,
+.dialog-project-thumb.is-active {
+  opacity: 1;
+  transform: translateY(-.1rem);
+}
+
+.dialog-project-thumb.is-active {
+  border-color: var(--accent-yellow);
+  box-shadow: inset 0 0 0 1px var(--accent-yellow);
+}
+
+.dialog-project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.72);
+}
+
+.dialog-project-thumb span,
+.dialog-project-thumb strong {
+  position: absolute;
+  z-index: 2;
+}
+
+.dialog-project-thumb span {
+  top: .4rem;
+  left: .45rem;
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0,0,0,.72);
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+.dialog-project-thumb strong {
+  right: .45rem;
+  bottom: .4rem;
+  left: .45rem;
+  overflow: hidden;
+  font-size: .65rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px .5rem rgba(0,0,0,.9);
+  white-space: nowrap;
+}
+
+.case-study-right {
+  padding-top: clamp(3.7rem, 5vw, 5rem);
+}
+
+.case-study-overview h3 {
+  position: relative;
+  padding-bottom: .75rem;
+  color: var(--text-light);
+  font-size: .76rem;
+}
+
+.case-study-overview h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2rem;
+  height: 2px;
+  background: var(--accent-yellow);
+}
+
+.case-study-overview p {
+  margin: .9rem 0 0;
+  color: var(--case-muted);
+  font-size: clamp(.78rem, .85vw, .9rem);
+  line-height: 1.55;
+}
+
+.case-study-insights {
+  display: grid;
+  gap: 1rem;
+  margin: clamp(1.4rem, 2vw, 2rem) 0 0;
+}
+
+.case-study-insights > div {
+  position: relative;
+  min-height: 2.6rem;
+  padding-left: 4rem;
+}
+
+.case-study-insights > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid rgba(255,255,10,.4);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(255,255,10,.14) 0 .2rem, transparent .23rem),
+    transparent;
+}
+
+.case-study-insights dt {
+  margin-bottom: .2rem;
+  color: var(--accent-yellow);
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.case-study-insights dd {
+  margin: 0;
+  color: rgba(248,247,242,.7);
+  font-size: clamp(.74rem, .82vw, .86rem);
+  line-height: 1.4;
+}
+
+.case-study-highlights {
+  margin-top: clamp(1.4rem, 2vw, 2rem);
+  padding: 1rem 1rem 1.05rem;
+  border: 1px solid var(--case-border);
+  border-radius: .75rem;
+  background: linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.018));
+}
+
+.case-study-highlights h3 {
+  padding-left: 1.55rem;
+}
+
+.case-study-highlights h3::before {
+  content: "☆";
+  position: absolute;
+  margin-left: -1.55rem;
+  color: var(--accent-yellow);
+  font-size: 1.15rem;
+  line-height: .7;
+}
+
+.case-study-highlights li {
+  padding-left: .9rem;
+}
+
+.case-study-highlights li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: rgba(248,247,242,.65);
+}
+
+.case-study-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: .8rem 1rem .8rem 1.2rem;
+  border: 1px solid var(--case-border);
+  border-radius: .75rem;
+  background: linear-gradient(90deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+}
+
+.case-study-footer-copy {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .9rem;
+}
+
+.case-study-footer-copy > span {
+  color: var(--accent-yellow);
+  font-size: 1.8rem;
+}
+
+.case-study-footer-copy p {
+  display: grid;
+  min-width: 0;
+  gap: .12rem;
+  margin: 0;
+}
+
+.case-study-footer-copy strong {
+  overflow: hidden;
+  font-size: .77rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.case-study-footer-copy small {
+  overflow: hidden;
+  color: rgba(248,247,242,.5);
+  font-size: .68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.case-study-cta {
+  display: inline-flex;
+  min-height: 2.55rem;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: .7rem 1rem;
+  border: 1px solid var(--text-dark);
+  border-radius: .65rem;
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  font-size: .72rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .2s var(--ease), box-shadow .2s;
+}
+
+.case-study-cta:hover {
+  transform: translateY(-.15rem);
+  box-shadow: 0 .7rem 1.6rem rgba(0,0,0,.28);
+}
+
+@media (max-width: 1280px) {
+  .case-study-layout {
+    grid-template-columns: minmax(15rem, .78fr) minmax(27rem, 1.35fr);
+    padding-right: clamp(3.3rem, 5vw, 4.5rem);
+  }
+
+  .case-study-right {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(15rem, .8fr) minmax(24rem, 1.2fr) minmax(18rem, 1fr);
+    gap: 1.4rem;
+    padding-top: 0;
+    overflow: visible;
+  }
+
+  .case-study-insights,
+  .case-study-highlights {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .video-dialog {
+    padding: 0;
+  }
+
+  .dialog-panel.project-case-study {
+    min-height: 100dvh;
+    border-radius: 0;
+    padding: 1.15rem;
+  }
+
+  .case-study-layout {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+  }
+
+  .case-study-player {
+    grid-row: 1;
+    padding-top: 3.5rem;
+  }
+
+  .case-study-left,
+  .case-study-right {
+    overflow: visible;
+  }
+
+  .case-study-right {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+
+  .project-case-study .video-wrap,
+  .project-case-study .video-wrap[data-orientation="portrait"],
+  .project-case-study .video-wrap[data-orientation="square"],
+  .project-case-study .video-wrap[data-orientation="landscape"] {
+    width: 100%;
+    height: min(68dvh, 38rem);
+    min-height: 22rem;
+  }
+
+  .project-case-study h2 {
+    max-width: 14ch;
+  }
+
+  .case-study-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .case-study-cta {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 560px) {
+  .dialog-panel.project-case-study {
+    padding: .85rem;
+  }
+
+  .dialog-close {
+    top: .75rem;
+    right: .75rem;
+  }
+
+  .case-study-player {
+    padding-top: 3.25rem;
+  }
+
+  .project-case-study .video-wrap,
+  .project-case-study .video-wrap[data-orientation="portrait"],
+  .project-case-study .video-wrap[data-orientation="square"],
+  .project-case-study .video-wrap[data-orientation="landscape"] {
+    height: min(64dvh, 34rem);
+    min-height: 19rem;
+  }
+
+  .case-study-metrics {
+    grid-template-columns: 1fr;
+    gap: .8rem;
+  }
+
+  .case-study-metrics > div,
+  .case-study-metrics > div:first-child {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    align-items: center;
+    gap: .8rem;
+    padding: 0;
+    border: 0;
+  }
+
+  .case-study-metrics dt {
+    margin: 0;
+  }
+
+  .dialog-project-thumb {
+    min-width: 8rem;
+  }
+
+  .case-study-footer-copy small {
+    white-space: normal;
+  }
+}
+
+
+/* Project case-study text entrance/exit. These wrappers reuse the main page
+   word-mask language but remain scoped to the dialog so no section animation,
+   spacing, or ScrollTrigger behavior is affected. */
+.project-case-study .dialog-word-target {
+  visibility: visible;
+}
+
+.project-case-study .dialog-word-target .word-reveal-mask,
+.project-case-study .dialog-word-target .word-reveal-word {
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.project-case-study .dialog-word-target .word-reveal-mask {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .page-shell {
-    --home-about-duration: .15s;
-  }
-
-  .portrait-transition-clone,
-  .name-transition-clone,
-  .headline-transition-clone {
-    display: none !important;
-  }
-
-  body.is-transitioning #about [data-transition-reveal] {
-    clip-path: none !important;
+  .project-case-study .dialog-word-target .word-reveal-word {
     transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
 }

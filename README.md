@@ -1,6 +1,6 @@
 # Vince Alpanta Portfolio
 
-A responsive, accessible single-page portfolio for Vince Alpanta, Video Editor and AI Video Specialist. It uses semantic HTML, modern CSS, vanilla JavaScript, and GSAP for the shared-element transitions, and is designed for GitHub Pages.
+A responsive, accessible single-page portfolio for Vince Alpanta, Video Editor and AI Video Specialist. It uses semantic HTML, modern CSS, vanilla JavaScript, native browser scrolling, and GSAP ScrollTrigger for shared-element and scroll-driven transitions. It is designed for GitHub Pages.
 
 ## Run locally
 
@@ -30,4 +30,4 @@ The included `.nojekyll` file keeps the deployment as a plain static site. Canon
 
 ## Performance notes
 
-Images below the fold are lazy-loaded, project video files load only when the viewer is opened, animation respects reduced-motion preferences, and no JavaScript framework or animation library is required.
+Images below the fold are lazy-loaded, project video files load only when the viewer is opened, and animation respects reduced-motion preferences. GSAP, ScrollTrigger, and Flip are loaded from jsDelivr with pinned versions; no smooth-scroll library or wheel interception is used.
