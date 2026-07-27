@@ -1902,9 +1902,14 @@
       });
     }
 
+    // Desktop About remains owned by the Home/About cinematic. Phones do not
+    // use that pinned scene, so give About the same compact word reveal as the
+    // remaining chapters instead of leaving its copy static.
+    if (!desktopQuery.matches) {
+      buildAutomaticSectionTimeline("about", aboutSection);
+    }
+
     [
-      // About is owned by the Home/About cinematic controller so its words
-      // cannot be reset or completed behind hidden transition wrappers.
       ["work", workShowcase],
       ["expect", $("#expect")],
       ["services", $("#services")],
