@@ -980,7 +980,7 @@ html.hero-intro-complete .hero-description {
 
 .hero-card-qualities {
   top: 53.4%;
-  left: calc(50% + min(15vw, 18rem));
+  left: calc(50% + min(15vw, 18rem) + .75rem);
   width: clamp(12.5rem, 14.3vw, 14.6rem);
   min-height: 16rem;
   padding: 1.2rem 1.25rem;
@@ -2831,6 +2831,20 @@ html.hero-intro-complete .hero-description {
   }
 }
 
+@media (min-width: 1101px) and (max-width: 1300px) {
+  .hero-card-project {
+    left: max(2rem, calc(50% - 26rem));
+  }
+
+  .hero-card-qualities {
+    left: calc(50% + 13rem);
+  }
+
+  .hero-card-workflow {
+    left: max(1.5rem, calc(50% - 22.75rem));
+  }
+}
+
 /* Mobile */
 @media (max-width: 820px) {
   :root {
@@ -2906,7 +2920,7 @@ html.hero-intro-complete .hero-description {
 
   .hero-card-qualities {
     z-index: 43;
-    top: 24%;
+    top: 18%;
     right: 0.55rem;
     width: 9.2rem;
     min-height: 11rem;
@@ -2928,7 +2942,7 @@ html.hero-intro-complete .hero-description {
   }
 
   .hero-card-workflow {
-    top: 69.5%;
+    top: 75%;
     left: 1rem;
     width: 9.5rem;
     min-height: 5.7rem;
@@ -2973,7 +2987,7 @@ html.hero-intro-complete .hero-description {
 
   .section-heading,
   .services-heading {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
     margin-bottom: 3.5rem;
   }
@@ -2987,7 +3001,7 @@ html.hero-intro-complete .hero-description {
   }
 
   .section-heading > div {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.3rem;
   }
 
@@ -3078,8 +3092,29 @@ html.hero-intro-complete .hero-description {
   .expect-grid,
   .faq-grid,
   .contact > .shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 4rem;
+  }
+
+  .section-heading,
+  .section-heading > div,
+  .section-heading h2,
+  .services-heading,
+  .services-heading h2,
+  .work-intro,
+  .work-title-block,
+  .work-intro h2,
+  .expect-grid,
+  .expect-heading,
+  .expect-list,
+  .faq-grid,
+  .faq-heading,
+  .accordion,
+  .contact > .shell,
+  .contact-intro,
+  .contact-form {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .expect-heading {
@@ -3820,9 +3855,53 @@ html.hero-intro-complete .hero-description {
    were still too narrow. Stack them before the mobile breakpoint so no title
    can run into its adjacent list or accordion. */
 @media (min-width: 821px) and (max-width: 1100px) {
+  .hero-card-project {
+    top: 52.5%;
+    left: 1.5rem;
+    width: clamp(10rem, 18vw, 12rem);
+  }
+
+  .hero-card-qualities {
+    right: 1.5rem;
+    width: clamp(10rem, 18vw, 12rem);
+    min-height: 10rem;
+    padding: .8rem;
+  }
+
+  .hero-card-qualities li {
+    gap: .5rem;
+    min-height: 1.55rem;
+    font-size: .72rem;
+  }
+
+  .hero-card-qualities i {
+    width: 1rem;
+    height: 1rem;
+    flex-basis: 1rem;
+  }
+
+  .hero-card-workflow {
+    left: 1.5rem;
+    width: 10rem;
+    min-height: 5.7rem;
+    padding: .65rem .8rem;
+  }
+
+  .hero-card-workflow .workflow-mark {
+    font-size: 1.8rem;
+  }
+
+  .hero-card-workflow strong {
+    font-size: .61rem;
+  }
+
+  .hero-card-workflow span:not(.workflow-mark) {
+    font-size: .7rem;
+  }
+
   .expect-grid,
   .faq-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 4rem;
   }
 
@@ -3889,6 +3968,21 @@ html.hero-intro-complete .hero-description {
 .work-intro .motion-mask-line,
 .services-heading .motion-mask-line {
   max-width: 100%;
+}
+
+@media (max-width: 820px) {
+  .motion-mask-line,
+  .motion-mask-block {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .motion-mask-inner,
+  .word-reveal-target,
+  .word-reveal-item {
+    max-width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6299,7 +6393,7 @@ html.hero-intro-complete .hero-description {
 
   #home .hero-card-project {
     z-index: 51 !important;
-    top: 38% !important;
+    top: 36.5% !important;
     left: .75rem !important;
     width: min(34vw, 9.15rem) !important;
     min-height: 5.55rem !important;
@@ -6349,8 +6443,8 @@ html.hero-intro-complete .hero-description {
     right: .35rem !important;
     left: auto !important;
     width: min(31vw, 8.35rem) !important;
-    min-height: 10rem !important;
-    padding: .85rem .65rem !important;
+    min-height: 8rem !important;
+    padding: .65rem !important;
   }
 
   #home .hero-card-qualities ul {
@@ -6358,28 +6452,30 @@ html.hero-intro-complete .hero-description {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    gap: .66rem !important;
+    gap: .3rem !important;
   }
 
   #home .hero-card-qualities li {
     display: flex !important;
     align-items: center !important;
-    gap: .48rem !important;
-    font-size: .66rem !important;
+    gap: .35rem !important;
+    min-height: 1rem !important;
+    font-size: .58rem !important;
     line-height: 1 !important;
     white-space: nowrap !important;
   }
 
   #home .hero-card-qualities i {
-    width: 1rem !important;
-    min-width: 1rem !important;
-    height: 1rem !important;
+    width: .85rem !important;
+    min-width: .85rem !important;
+    height: .85rem !important;
   }
 
   #home .hero-card-workflow {
     z-index: 51 !important;
-    top: 82% !important;
+    top: auto !important;
     right: auto !important;
+    bottom: .5rem !important;
     left: 1.15rem !important;
     width: min(36vw, 9.7rem) !important;
     min-height: 6.15rem !important;
@@ -6481,12 +6577,12 @@ html.hero-intro-complete .hero-description {
 
   #home .hero-card-qualities {
     right: .2rem !important;
-    padding-inline: .5rem !important;
+    padding-inline: .4rem !important;
   }
 
   #home .hero-card-qualities li {
-    gap: .4rem !important;
-    font-size: .58rem !important;
+    gap: .25rem !important;
+    font-size: .54rem !important;
   }
 
   #home .hero-card-workflow {
