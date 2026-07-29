@@ -2161,6 +2161,36 @@
       ],
       tagline: "High-Energy Product Stories Built to Perform",
       taglineSub: "Commercial edits that make the product clear, memorable, and hard to ignore."
+    },
+    "videos/Sample5.mp4": {
+      badge: "Skincare UGC",
+      summary: "A creator-led peptide serum video built around a clear product message and an approachable social-first presentation.",
+      duration: "27 sec",
+      method: "UGC + Editing",
+      ratio: "9:16",
+      role: "Video Editor + AI Video Specialist",
+      deliverables: [
+        "Product-led story structure",
+        "Creator-style video editing",
+        "On-screen text and benefit callouts",
+        "Sound design",
+        "Color finishing",
+        "Vertical social delivery"
+      ],
+      quote: "A clear product story makes every benefit easier to remember.",
+      overview: "This peptide serum video uses a creator-led presentation, readable benefit callouts, and a focused vertical composition to keep the skincare product and its message easy to follow.",
+      goal: "Present the serum benefits clearly through an approachable creator-style video.",
+      audience: "Skincare audiences viewing short-form social content.",
+      strategy: "Creator-led framing, product visibility, concise benefit messaging, and mobile-first pacing.",
+      highlights: [
+        "Clear peptide serum product focus",
+        "Firming, hydrating, and smoothing callouts",
+        "Creator-first presentation",
+        "Readable vertical composition",
+        "Social-ready 9:16 delivery"
+      ],
+      tagline: "Clear Skincare Stories Made for Social",
+      taglineSub: "Creator-led edits that keep the product visible and the message easy to understand."
     }
   };
 
@@ -2269,6 +2299,7 @@
 
   const resetProjectVideoFit = () => {
     projectVideoWrap?.removeAttribute("data-orientation");
+    projectVideoWrap?.style.removeProperty("--project-video-ratio");
   };
 
   const syncProjectVideoFit = () => {
@@ -2278,6 +2309,7 @@
     if (!width || !height) return;
 
     const ratio = width / height;
+    projectVideoWrap.style.setProperty("--project-video-ratio", `${width} / ${height}`);
     projectVideoWrap.dataset.orientation = ratio < 0.9
       ? "portrait"
       : ratio > 1.1

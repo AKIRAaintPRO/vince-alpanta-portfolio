@@ -1510,6 +1510,11 @@ html.hero-intro-complete .hero-description {
   margin-top: 8rem;
 }
 
+.project-four {
+  grid-column: 7 / span 5;
+  margin-top: 8rem;
+}
+
 .project-media {
   position: relative;
   width: 100%;
@@ -3013,7 +3018,8 @@ html.hero-intro-complete .hero-description {
 
   .project-one,
   .project-two,
-  .project-three {
+  .project-three,
+  .project-four {
     grid-column: auto;
     margin-top: 0;
   }
@@ -3340,7 +3346,7 @@ html.hero-intro-complete .hero-description {
     width: auto;
     height: auto;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.2rem;
     padding: 0;
     transform: none !important;
@@ -3350,6 +3356,7 @@ html.hero-intro-complete .hero-description {
   .project-one,
   .project-two,
   .project-three {
+    grid-column: auto;
     width: auto;
     height: 32rem;
     min-height: 0;
@@ -4163,7 +4170,7 @@ html.hero-intro-complete .hero-description {
   --case-border: rgba(248, 247, 242, .14);
   --case-muted: rgba(248, 247, 242, .66);
   position: relative;
-  width: min(100%, 96rem);
+  width: min(100%, 118rem);
   min-height: calc(100dvh - clamp(.9rem, 2vw, 1.8rem));
   height: auto;
   max-height: none;
@@ -4223,8 +4230,8 @@ html.hero-intro-complete .hero-description {
   z-index: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(15.5rem, .86fr) minmax(29rem, 1.55fr) minmax(16.5rem, .88fr);
-  gap: clamp(1.25rem, 2.3vw, 2.6rem);
+  grid-template-columns: minmax(16rem, .82fr) minmax(38rem, 2fr) minmax(17rem, .86fr);
+  gap: clamp(1rem, 1.6vw, 2rem);
   align-items: stretch;
   padding-right: clamp(3.3rem, 4vw, 4.5rem);
 }
@@ -4503,18 +4510,20 @@ html.hero-intro-complete .hero-description {
   min-width: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: minmax(24rem, 1fr) auto;
+  grid-template-rows: auto auto;
   align-content: center;
   gap: .55rem;
 }
 
 .project-case-study .video-wrap {
   position: relative;
-  width: 100%;
+  width: auto;
   min-width: 0;
-  min-height: 24rem;
-  height: min(68dvh, 45rem);
+  min-height: 0;
+  height: min(94dvh, 72rem);
   max-height: none;
+  max-width: 100%;
+  aspect-ratio: var(--project-video-ratio, 9 / 16);
   justify-self: center;
   overflow: hidden;
   border: 1px solid rgba(248, 247, 242, .22);
@@ -4526,16 +4535,19 @@ html.hero-intro-complete .hero-description {
 }
 
 .project-case-study .video-wrap[data-orientation="portrait"] {
-  width: min(100%, 39rem);
+  width: auto;
 }
 
 .project-case-study .video-wrap[data-orientation="square"] {
-  width: min(100%, 44rem);
+  width: auto;
+  height: min(86dvh, 60rem);
 }
 
 .project-case-study .video-wrap[data-orientation="landscape"] {
   width: 100%;
-  height: min(58dvh, 36rem);
+  height: auto;
+  max-height: 82dvh;
+  aspect-ratio: var(--project-video-ratio, 16 / 9);
   align-self: center;
 }
 
@@ -4852,9 +4864,98 @@ html.hero-intro-complete .hero-description {
   box-shadow: 0 .7rem 1.6rem rgba(0,0,0,.28);
 }
 
+/* Large-screen case-study typography. Phone and tablet sizing stays at the
+   compact defaults above so the mobile composition and wrapping do not change. */
+@media (min-width: 1024px) {
+  .case-study-kicker {
+    font-size: clamp(.8rem, .9vw, .95rem);
+  }
+
+  .case-study-summary {
+    font-size: clamp(1.05rem, 1.15vw, 1.28rem);
+  }
+
+  .case-study-metrics dt {
+    font-size: .75rem;
+  }
+
+  .case-study-metrics strong {
+    font-size: clamp(1rem, 1.15vw, 1.25rem);
+  }
+
+  .case-study-metrics span {
+    font-size: .68rem;
+  }
+
+  .case-study-field h3,
+  .case-study-deliverables h3,
+  .case-study-overview h3,
+  .case-study-highlights h3 {
+    font-size: .82rem;
+  }
+
+  .case-study-field p {
+    font-size: .9rem;
+  }
+
+  .case-study-deliverables ul,
+  .case-study-highlights ul {
+    gap: .65rem;
+  }
+
+  .case-study-deliverables li,
+  .case-study-highlights li {
+    font-size: clamp(.9rem, .95vw, 1.05rem);
+  }
+
+  .case-study-quote p {
+    font-size: clamp(.95rem, 1.05vw, 1.15rem);
+  }
+
+  .case-study-quote cite {
+    font-size: .78rem;
+  }
+
+  .case-study-author strong {
+    font-size: .9rem;
+  }
+
+  .case-study-author span {
+    font-size: .76rem;
+  }
+
+  .case-study-overview h3 {
+    font-size: .9rem;
+  }
+
+  .case-study-overview p {
+    font-size: clamp(1rem, 1.05vw, 1.2rem);
+  }
+
+  .case-study-insights {
+    gap: 1.25rem;
+  }
+
+  .case-study-insights > div {
+    min-height: 3rem;
+  }
+
+  .case-study-insights dt {
+    font-size: .78rem;
+  }
+
+  .case-study-insights dd {
+    font-size: clamp(.95rem, 1vw, 1.1rem);
+  }
+
+  .case-study-highlights {
+    padding: 1.2rem 1.2rem 1.25rem;
+  }
+}
+
 @media (max-width: 1280px) {
   .case-study-layout {
-    grid-template-columns: minmax(15rem, .78fr) minmax(27rem, 1.35fr);
+    grid-template-columns: minmax(14rem, .65fr) minmax(32rem, 1.7fr);
     padding-right: clamp(3.3rem, 5vw, 4.5rem);
   }
 
@@ -4909,9 +5010,16 @@ html.hero-intro-complete .hero-description {
   .project-case-study .video-wrap[data-orientation="portrait"],
   .project-case-study .video-wrap[data-orientation="square"],
   .project-case-study .video-wrap[data-orientation="landscape"] {
+    width: auto;
+    height: min(84dvh, 48rem);
+    min-height: 0;
+    max-width: 100%;
+    aspect-ratio: var(--project-video-ratio, 9 / 16);
+  }
+
+  .project-case-study .video-wrap[data-orientation="landscape"] {
     width: 100%;
-    height: min(68dvh, 38rem);
-    min-height: 22rem;
+    height: auto;
   }
 
   .project-case-study h2 {
@@ -4946,8 +5054,11 @@ html.hero-intro-complete .hero-description {
   .project-case-study .video-wrap[data-orientation="portrait"],
   .project-case-study .video-wrap[data-orientation="square"],
   .project-case-study .video-wrap[data-orientation="landscape"] {
-    height: min(64dvh, 34rem);
-    min-height: 19rem;
+    width: auto;
+    height: min(82dvh, 42rem);
+    min-height: 0;
+    max-width: 100%;
+    aspect-ratio: var(--project-video-ratio, 9 / 16);
   }
 
   .case-study-metrics {
@@ -5500,12 +5611,12 @@ html.hero-intro-complete .hero-description {
     width: 100%;
     height: auto;
     min-height: 0;
-    max-height: 72dvh;
-    aspect-ratio: 9 / 16;
+    max-height: none;
+    aspect-ratio: var(--project-video-ratio, 9 / 16);
   }
 
   .project-case-study .video-wrap[data-orientation="landscape"] {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: var(--project-video-ratio, 16 / 9);
   }
 
   .project-case-study .video-wrap video {
