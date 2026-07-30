@@ -2073,34 +2073,34 @@
 
   const PROJECT_CASE_STUDIES = {
     "videos/Sample1.mp4": {
-      badge: "UGC Video",
-      summary: "A warm, creator-led skincare concept built to feel natural, trustworthy, and native to the social feed.",
+      badge: "Hair Care Ad",
+      summary: "A warm, product-led hair-care concept built around clear benefits and a polished social-first presentation.",
       duration: "22 sec",
-      method: "AI + UGC",
+      method: "AI + Editing",
       ratio: "9:16",
       role: "Video Editor + AI Video Specialist",
       deliverables: [
         "Concept and visual direction",
-        "AI-assisted UGC production",
+        "AI-assisted visual production",
         "Editing and on-screen text",
         "Sound design",
         "Color finishing",
         "Platform-ready delivery"
       ],
-      quote: "Authentic stories build real connections.",
-      overview: "This creator-led skincare video was designed to showcase the product in a warm, everyday setting. The edit balances natural delivery, clear benefit callouts, and social-first pacing so the product remains the visual focus.",
-      goal: "Build product trust and encourage action through relatable storytelling.",
-      audience: "Skincare and beauty audiences on social platforms.",
-      strategy: "Warm lifestyle imagery, benefit-led copy, creator-style pacing, and clear product emphasis.",
+      quote: "Clear benefits make the product story easy to remember.",
+      overview: "This hair-care video was designed to showcase a nourishing oil in a warm, everyday setting. The edit balances clear benefit callouts with social-first pacing so the product remains the visual focus.",
+      goal: "Present the product benefits clearly through approachable visual storytelling.",
+      audience: "Hair-care and beauty audiences on social platforms.",
+      strategy: "Warm lifestyle imagery, benefit-led copy, concise pacing, and clear product emphasis.",
       highlights: [
-        "Natural creator-first presentation",
+        "Warm product-led presentation",
         "Benefit-focused on-screen text",
         "Strong product visibility",
         "Warm sound and color finish",
         "Optimized vertical delivery"
       ],
-      tagline: "Turning Real Experiences into Powerful Stories",
-      taglineSub: "UGC content that connects, converts, and builds brand trust."
+      tagline: "Hair Care Benefits, Shaped into a Clear Story",
+      taglineSub: "A polished social video built around product clarity and memorable visual moments."
     },
     "videos/Sample3.mp4": {
       badge: "AI Explainer",

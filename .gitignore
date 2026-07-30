@@ -1,3 +1,4 @@
 .tools/
 *-check.png
 .visual-tests/
+test-results/

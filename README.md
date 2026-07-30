@@ -24,6 +24,8 @@ The included `.nojekyll` file keeps the deployment as a plain static site. Canon
 ## Content maintenance
 
 - Project video paths and thumbnails are defined in `index.html` through `data-video` and `data-poster` attributes.
+- Keep every project-card title on the same shared font-size and line-height scale across desktop, tablet, and mobile. For longer titles, use intentional line breaks or title-specific layout classes, but never change the title's visual size relative to the other cards.
+- When adding a new project, match the existing portrait-card proportions, title placement, spacing, tags, play control, and responsive behavior so the full project row remains visually consistent.
 - The contact form intentionally opens a prefilled email draft; it does not claim to submit to a backend.
 - Replace the editable journey and revision-policy comments only when verified details are available.
 - Compress large MP4 files before production deployment when possible, while preserving filenames or updating every matching path.

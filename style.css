@@ -6744,3 +6744,69 @@ html.hero-intro-complete .hero-description {
     white-space: normal !important;
   }
 }
+
+/* The first project uses a concise two-line title so its copy does not compete
+   with the typography already present in the updated hair-care thumbnail. */
+.project-copy h3.project-title-compact {
+  max-width: 13ch;
+  line-height: .98;
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.project-copy h3.project-title-creators {
+  max-width: none;
+  line-height: .96;
+}
+
+.project-title-creators span {
+  display: block;
+  white-space: nowrap;
+}
+
+@media (min-width: 1101px) {
+  .project-copy h3.project-title-compact {
+    max-width: 11ch;
+    line-height: .96;
+  }
+
+  .project-copy h3.project-title-creators {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .project-copy h3.project-title-compact {
+    max-width: 13ch;
+    line-height: .98;
+  }
+
+  .project-copy h3.project-title-creators {
+    max-width: none;
+  }
+}
+
+/* Keep every project title on one shared type scale. Title-specific classes
+   control only their line arrangement, never their visual size. */
+.project-copy h3,
+.project-copy h3.project-title-compact,
+.project-copy h3.project-title-creators {
+  font-size: clamp(1.85rem, 3vw, 2.4rem);
+  line-height: .96;
+}
+
+@media (min-width: 1101px) {
+  .project-copy h3,
+  .project-copy h3.project-title-compact,
+  .project-copy h3.project-title-creators {
+    font-size: clamp(1.8rem, 2.1vw, 2.4rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .project-copy h3,
+  .project-copy h3.project-title-compact,
+  .project-copy h3.project-title-creators {
+    font-size: clamp(1.8rem, 8vw, 2.35rem);
+  }
+}
