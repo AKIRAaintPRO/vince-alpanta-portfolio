@@ -1515,6 +1515,11 @@ html.hero-intro-complete .hero-description {
   margin-top: 8rem;
 }
 
+.project-five {
+  grid-column: 2 / span 6;
+  margin-top: 8rem;
+}
+
 .project-media {
   position: relative;
   width: 100%;
@@ -3019,7 +3024,8 @@ html.hero-intro-complete .hero-description {
   .project-one,
   .project-two,
   .project-three,
-  .project-four {
+  .project-four,
+  .project-five {
     grid-column: auto;
     margin-top: 0;
   }

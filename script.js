@@ -2191,6 +2191,36 @@
       ],
       tagline: "Clear Skincare Stories Made for Social",
       taglineSub: "Creator-led edits that keep the product visible and the message easy to understand."
+    },
+    "videos/Sample6.mp4": {
+      badge: "Hair Care UGC",
+      summary: "A creator-led hair-oil video built around a direct breakage hook, clear product visibility, and an approachable social presentation.",
+      duration: "2:39",
+      method: "UGC + Editing",
+      ratio: "9:16",
+      role: "Video Editor",
+      deliverables: [
+        "Creator-led story structure",
+        "Long-form social video editing",
+        "On-screen hook and product callouts",
+        "Sound design",
+        "Color finishing",
+        "Vertical social delivery"
+      ],
+      quote: "A strong hook turns a familiar problem into a story worth following.",
+      overview: "This hair-strengthening oil video opens with a direct breakage concern and a creator-led product presentation. The vertical edit keeps the product and its core message clear for a longer-form social viewing experience.",
+      goal: "Frame a common hair-care concern clearly and introduce the strengthening oil as the focus of the story.",
+      audience: "Hair-care audiences viewing creator-led social content.",
+      strategy: "A problem-first hook, expressive creator framing, visible product placement, and readable mobile-first composition.",
+      highlights: [
+        "Direct breakage-focused opening hook",
+        "Clear hair-oil product presentation",
+        "Creator-led vertical framing",
+        "Longer-form social structure",
+        "Social-ready 9:16 delivery"
+      ],
+      tagline: "Hair-Care Stories That Start with a Strong Hook",
+      taglineSub: "Creator-led editing that keeps the problem clear and the product easy to remember."
     }
   };
 
