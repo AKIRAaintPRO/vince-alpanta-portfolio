@@ -2073,10 +2073,10 @@
 
   const PROJECT_CASE_STUDIES = {
     "videos/Sample1.mp4": {
-      badge: "Hair Care Ad",
+      badge: "Hair Care UGC",
       summary: "A warm, product-led hair-care concept built around clear benefits and a polished social-first presentation.",
       duration: "22 sec",
-      method: "AI + Editing",
+      method: "UGC + Editing",
       ratio: "9:16",
       role: "Video Editor + AI Video Specialist",
       deliverables: [
@@ -2193,10 +2193,10 @@
       taglineSub: "Creator-led edits that keep the product visible and the message easy to understand."
     },
     "videos/Sample6.mp4": {
-      badge: "Hair Care UGC",
+      badge: "Hair Care VSL",
       summary: "A creator-led hair-oil video built around a direct breakage hook, clear product visibility, and an approachable social presentation.",
       duration: "2:39",
-      method: "UGC + Editing",
+      method: "VSL + Editing",
       ratio: "9:16",
       role: "Video Editor",
       deliverables: [
